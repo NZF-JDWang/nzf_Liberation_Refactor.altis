@@ -163,7 +163,7 @@ if (isServer) then {
     if (KP_liberation_ace && local _unit) then {
         if (KP_liberation_kill_debug > 0) then {[format ["_unit is local to: %1", debug_source], "KILL"] remoteExecCall ["KPLIB_fnc_log", 2];};
         KP_liberation_ace_killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
-        publicVariable "KP_liberation_ace_killer";
+        publicVariableServer "KP_liberation_ace_killer";
     };
 };
 

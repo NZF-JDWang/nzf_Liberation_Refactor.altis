@@ -67,7 +67,7 @@ _i = 0;
 if (_update) then {
     if ((_storage getVariable ["KP_liberation_storage_type", -1]) == 1) then {
         recalculate_sectors = true;
-        publicVariable "recalculate_sectors";
+        publicVariableServer "recalculate_sectors";
     };
 };
 

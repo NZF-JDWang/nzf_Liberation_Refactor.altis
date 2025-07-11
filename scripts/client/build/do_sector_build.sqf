@@ -98,7 +98,7 @@ if (((_this select 3) select 0) == KP_liberation_small_storage_building) then {
     player removeAction _idactvector;
 
     recalculate_sectors = true;
-    publicVariable "recalculate_sectors";
+    publicVariableServer "recalculate_sectors";
 
     build_confirmed = 0;
 } else {
