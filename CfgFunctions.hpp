@@ -84,6 +84,9 @@ class KPLIB {
         class spawnRegularSquad         {};
         class spawnVehicle              {};
         class swapInventory             {};
+        // Save / Restore sector state
+        class saveSectorState          {};
+        class restoreSectorState       {};
     };
     class functions_curator {
         file = "functions\curator";

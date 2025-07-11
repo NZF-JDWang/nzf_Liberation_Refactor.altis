@@ -181,6 +181,18 @@ private _weights = [
     air_weight
 ];
 
+// -------------------------------------------------------------------------
+// Serialize persistent sector states (enemy units preserved when a sector
+// despawns). HashMaps can’t be written to profileNamespace directly, so we
+// convert it to an array of [sectorMarker, stateArray] pairs.
+
+private _savedSectorStates = [];
+if (!isNil "KPLIB_sectorStates") then {
+    {
+        _savedSectorStates pushBack [_x, _y];
+    } forEach KPLIB_sectorStates;
+};
+
 // Pack the save data in the save array
 [
     kp_liberation_version,
@@ -204,5 +216,6 @@ private _weights = [
     resources_intel,
     _allMines,
     _allCrates,
-    KPLIB_sectorTowers
+    KPLIB_sectorTowers,
+    _savedSectorStates
 ] // return

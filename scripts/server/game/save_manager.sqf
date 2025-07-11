@@ -196,6 +196,14 @@ if (!isNil "_saveData") then {
         _allMines                                   = _saveData param [19, []];
         _allCrates                                  = _saveData param [20, []];
         KPLIB_sectorTowers                          = _saveData param [21, []];
+        private _savedSectorStates                   = _saveData param [22, []];
+
+        // Rebuild hashmap from serialised array
+        KPLIB_sectorStates = createHashMap;
+        {
+            KPLIB_sectorStates set [_x select 0, _x select 1];
+        } forEach _savedSectorStates;
+        publicVariable "KPLIB_sectorStates";
 
         stats_ammo_produced                         = _stats select  0;
         stats_ammo_spent                            = _stats select  1;
@@ -257,6 +265,10 @@ if (!isNil "_saveData") then {
         KP_liberation_civ_rep                       = _saveData select 15;
         KP_liberation_production_markers            = _saveData select 16;
         KP_liberation_guerilla_strength             = _saveData select 17;
+
+        // Older saves don’t contain sector state data – start with empty map
+        KPLIB_sectorStates = createHashMap;
+        publicVariable "KPLIB_sectorStates";
 
         stats_opfor_soldiers_killed                 = _stats select  0;
         stats_opfor_killed_by_players               = _stats select  1;

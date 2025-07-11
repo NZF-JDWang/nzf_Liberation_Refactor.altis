@@ -1,7 +1,7 @@
 // base amount of sector lifetime tickets
 // if there are no enemies one ticket is removed every SECTOR_TICK_TIME seconds
 // 12 * 5 = 60s by default
-#define BASE_TICKETS                12
+#define BASE_TICKETS                2
 #define SECTOR_TICK_TIME            5
 // delay in minutes from which addional time will be added
 #define ADDITIONAL_TICKETS_DELAY    5
@@ -31,8 +31,13 @@ private _sector_despawn_tickets = BASE_TICKETS;
 private _maximum_additional_tickets = (KP_liberation_delayDespawnMax * 60 / SECTOR_TICK_TIME);
 private _popfactor = 1;
 private _guerilla = false;
-
-if (GRLIB_unitcap < 1) then {_popfactor = GRLIB_unitcap;};
+// === Persistent Sector State =============================================
+// Try to restore any previously saved unit/vehicle state for this sector.
+private _restored_units = [_sector] call KPLIB_fnc_restoreSectorState;
+private _didRestore = (count _restored_units > 0);
+if (_didRestore) then {
+    _managed_units = _restored_units;
+};
 
 if (_sector in active_sectors) exitWith {};
 active_sectors pushback _sector; publicVariable "active_sectors";
@@ -40,7 +45,7 @@ active_sectors pushback _sector; publicVariable "active_sectors";
 private _opforcount = [] call KPLIB_fnc_getOpforCap;
 [_sector, _opforcount] call wait_to_spawn_sector;
 
-if ((!(_sector in blufor_sectors)) && (([markerPos _sector, [_opforcount] call KPLIB_fnc_getSectorRange, GRLIB_side_friendly] call KPLIB_fnc_getUnitsCount) > 0)) then {
+if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_opforcount] call KPLIB_fnc_getSectorRange, GRLIB_side_friendly] call KPLIB_fnc_getUnitsCount) > 0)) then {
 
     if (_sector in sectors_bigtown) then {
         if (combat_readiness < 30) then {_infsquad = "militia";};
@@ -251,6 +256,8 @@ if ((!(_sector in blufor_sectors)) && (([markerPos _sector, [_opforcount] call K
             };
 
             _stopit = true;
+            // Sector captured, clear any saved state (not needed once BLUFOR holds sector)
+            if (!isNil "KPLIB_sectorStates") then {KPLIB_sectorStates deleteAt _sector; publicVariable "KPLIB_sectorStates";};
 
             {[_x] spawn prisonner_ai;} forEach ((markerPos _sector) nearEntities [["Man"], _local_capture_size * 1.2]);
 
@@ -286,6 +293,8 @@ if ((!(_sector in blufor_sectors)) && (([markerPos _sector, [_opforcount] call K
             };
 
             if (_sector_despawn_tickets <= 0) then {
+                // Save current state before despawning so it can be restored later
+                [_sector, _managed_units] call KPLIB_fnc_saveSectorState;
                 {
                     if (_x isKindOf "Man") then {
                         deleteVehicle _x;
