@@ -23,6 +23,9 @@ params [
 
 if (_text isEqualTo "" || _tag isEqualTo "") exitWith {["Empty string given"] call BIS_fnc_error; false};
 
+// Master debug toggle (set via CBA setting in cba_settings.sqf)
+if (!(missionNamespace getVariable ["KPLIB_DebugLogging", false])) exitWith {true};
+
 private _msg = text ([
     "[KPLIB] [",
     _tag,

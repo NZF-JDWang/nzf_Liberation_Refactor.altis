@@ -248,3 +248,9 @@ class CfgTaskDescriptions {
 #include "KP\KPGUI\KPGUI_defines.hpp"
 #include "KP\KPPLM\ui\KPPLM_dialog.hpp"
 
+class Extended_PreInit_EventHandlers {
+    class KPLIB_Settings {
+        init = "call compile preprocessFileLineNumbers 'cba_settings.sqf'";
+    };
+};
+
