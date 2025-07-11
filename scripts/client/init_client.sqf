@@ -26,7 +26,12 @@ if (typeOf player == "VirtualSpectator_F") exitWith {
     execVM "scripts\client\markers\hostile_groups.sqf";
     execVM "scripts\client\markers\sector_manager.sqf";
     execVM "scripts\client\markers\spot_timer.sqf";
-    execVM "scripts\client\misc\synchronise_vars.sqf";
+    if (isNil "KP_liberation_useDeltaSync") then {KP_liberation_useDeltaSync = true;};
+    if (KP_liberation_useDeltaSync) then {
+        execVM "scripts\client\misc\synchronise_vars_delta.sqf";
+    } else {
+        execVM "scripts\client\misc\synchronise_vars.sqf";
+    };
     execVM "scripts\client\ui\ui_manager.sqf";
 };
 
@@ -58,7 +63,12 @@ execVM "scripts\client\misc\init_arsenal.sqf";
 execVM "scripts\client\misc\permissions_warning.sqf";
 if (!KP_liberation_ace) then {execVM "scripts\client\misc\resupply_manager.sqf";};
 execVM "scripts\client\misc\secondary_jip.sqf";
-execVM "scripts\client\misc\synchronise_vars.sqf";
+if (isNil "KP_liberation_useDeltaSync") then {KP_liberation_useDeltaSync = true;};
+if (KP_liberation_useDeltaSync) then {
+    execVM "scripts\client\misc\synchronise_vars_delta.sqf";
+} else {
+    execVM "scripts\client\misc\synchronise_vars.sqf";
+};
 execVM "scripts\client\misc\synchronise_eco.sqf";
 execVM "scripts\client\misc\playerNamespace.sqf";
 execVM "scripts\client\spawn\redeploy_manager.sqf";

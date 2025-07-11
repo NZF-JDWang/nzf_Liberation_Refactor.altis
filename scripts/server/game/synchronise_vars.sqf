@@ -39,7 +39,7 @@ private _armor_weight_old = -1;
 private _air_weight_old = -1;
 
 while {true} do {
-    waitUntil {sleep 0.25;
+    waitUntil {sleep 1;
         !(_KP_liberation_fob_resources_old isEqualTo KP_liberation_fob_resources)
         || _KP_liberation_supplies_global_old != KP_liberation_supplies_global
         || _KP_liberation_ammo_global_old != KP_liberation_ammo_global
@@ -100,4 +100,5 @@ while {true} do {
     _infantry_weight_old = infantry_weight;
     _armor_weight_old = armor_weight;
     _air_weight_old = air_weight;
+    sleep 1;
 };

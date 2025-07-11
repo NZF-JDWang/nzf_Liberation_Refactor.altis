@@ -14,6 +14,11 @@ sector_guerilla = compileFinal preprocessFileLineNumbers "scripts\server\asymmet
 asym_sector_ambush = compileFinal preprocessFileLineNumbers "scripts\server\asymmetric\random\asym_sector_ambush.sqf";
 civinfo_task = compileFinal preprocessFileLineNumbers "scripts\server\civinformant\tasks\civinfo_task.sqf";
 
-execVM "scripts\client\misc\synchronise_vars.sqf";
+if (isNil "KP_liberation_useDeltaSync") then {KP_liberation_useDeltaSync = true;};
+if (KP_liberation_useDeltaSync) then {
+    execVM "scripts\client\misc\synchronise_vars_delta.sqf";
+} else {
+    execVM "scripts\client\misc\synchronise_vars.sqf";
+};
 execVM "scripts\client\misc\synchronise_eco.sqf";
 execVM "scripts\server\offloading\show_fps.sqf";
