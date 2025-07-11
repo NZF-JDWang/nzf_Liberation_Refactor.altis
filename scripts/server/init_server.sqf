@@ -50,12 +50,7 @@ execVM "scripts\server\game\manage_weather.sqf";
 execVM "scripts\server\game\playtime.sqf";
 execVM "scripts\server\game\save_manager.sqf";
 execVM "scripts\server\game\spawn_radio_towers.sqf";
-if (isNil "KP_liberation_useDeltaSync") then {KP_liberation_useDeltaSync = true;};
-if (KP_liberation_useDeltaSync) then {
-    execVM "scripts\server\game\synchronise_vars_delta.sqf";
-} else {
-    execVM "scripts\server\game\synchronise_vars.sqf";
-};
+execVM "scripts\server\game\synchronise_vars_delta.sqf";
 execVM "scripts\server\game\synchronise_eco.sqf";
 execVM "scripts\server\game\zeus_synchro.sqf";
 execVM "scripts\server\offloading\show_fps.sqf";
