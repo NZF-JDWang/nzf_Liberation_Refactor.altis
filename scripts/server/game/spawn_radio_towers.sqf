@@ -5,6 +5,9 @@ private _saved = [];
 private _classname = "";
 private _tower = objNull;
 
+// Ensure persistence array exists
+if (isNil "KPLIB_sectorTowers") then { KPLIB_sectorTowers = []; };
+
 {
     _sector = _x;
     _saved = KPLIB_sectorTowers select {(_x select 0) isEqualTo _sector};
