@@ -23,9 +23,30 @@ params [
     ["_side", GRLIB_side_friendly, [sideEmpty]]
 ];
 
-private _amount = _side countSide ((_pos nearEntities ["Man", _radius]) select {!(captive _x) && ((getpos _x) select 2 < 500)});
+// Thresholds to determine if an AIR vehicle should count for sector activation
+#define MAX_AIR_ALT 200        // metres AGL
+#define MAX_AIR_SPEED 75       // km/h  (~21 m/s)
+
+// Filter infantry / dismounts (altitude < 500 as before)
+private _amount = _side countSide ((_pos nearEntities ["Man", _radius]) select {
+    !(captive _x) && ((getPosATL _x) select 2 < 500)
+});
+
+// Filter vehicles with extra rules for aircraft
+private _vehicles = (_pos nearEntities [["Car", "Tank", "Air", "Boat"], _radius]) select {
+    count (crew _x) > 0 && {((getPosATL _x) select 2) < 500}
+};
+
 {
-    _amount = _amount + (_side countSide (crew _x));
-} forEach ((_pos nearEntities [["Car", "Tank", "Air", "Boat"], _radius]) select {((getpos _x) select 2 < 500) && count (crew _x) > 0});
+    private _veh = _x;
+    if (_veh isKindOf "Air") then {
+        // Require low height AND low speed → avoids high-speed fly-by spawning
+        if ( ((getPosATL _veh) select 2) < MAX_AIR_ALT && {speed _veh < MAX_AIR_SPEED} ) then {
+            _amount = _amount + (_side countSide (crew _veh));
+        };
+    } else {
+        _amount = _amount + (_side countSide (crew _veh));
+    };
+} forEach _vehicles;
 
 _amount

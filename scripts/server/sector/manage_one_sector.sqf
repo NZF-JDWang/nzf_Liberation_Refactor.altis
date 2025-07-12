@@ -29,7 +29,19 @@ private _squad4 = [];
 private _minimum_building_positions = 5;
 private _sector_despawn_tickets = BASE_TICKETS;
 private _maximum_additional_tickets = (KP_liberation_delayDespawnMax * 60 / SECTOR_TICK_TIME);
-private _popfactor = 1;
+// --- Escalation system ---------------------------------------------
+// Ensure global escalation map exists and sector has an entry
+if (isNil "KPLIB_sectorEscalation") then { KPLIB_sectorEscalation = createHashMap; };
+if (isNil { KPLIB_sectorEscalation get _sector }) then {
+    KPLIB_sectorEscalation set [_sector, 1];
+};
+
+// Multiplier that scales certain spawn counts (buildings, extra squads)
+private _popfactor = KPLIB_sectorEscalation get _sector;
+// Determine if the sector is currently *uncapturable* (rear sector).
+private _eligibleEnemies = if (isNil "KPLIB_captureEligiblePairs") then { [] } else { (KPLIB_captureEligiblePairs apply {_x select 0}) };
+private _isRear = !(_sector in _eligibleEnemies);
+//-----------------------------------------------------------------------
 private _guerilla = false;
 // === Persistent Sector State =============================================
 // Try to restore any previously saved unit/vehicle state for this sector.
@@ -225,6 +237,20 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
         _managed_units = _managed_units + (units _grp);
     };
 
+    // --- Escalation: spawn additional infantry squads proportional to escalation factor ---
+    private _escVal = KPLIB_sectorEscalation get _sector;
+    if (isNil "_escVal") then {_escVal = 1};
+    if (_escVal > 1) then {
+        private _extraSquads = floor ((_escVal - 1) / 0.25);   // +1 squad per +25 % escalation
+        if (_extraSquads > 0) then {
+            for "_i" from 1 to _extraSquads do {
+                private _grpAdd = [_sector, ([_infsquad] call KPLIB_fnc_getSquadComp)] call KPLIB_fnc_spawnRegularSquad;
+                [_grpAdd, _sectorpos] spawn add_defense_waypoints;
+                _managed_units append (units _grpAdd);
+            };
+        };
+    };
+
     if (_spawncivs && GRLIB_civilian_activity > 0) then {
         _managed_units = _managed_units + ([_sector] call KPLIB_fnc_spawnCivilians);
     };
@@ -235,6 +261,28 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
     if (_guerilla) then {
         [_sector] spawn sector_guerilla;
     };
+
+    // --- Escalation: casualty tracking for rear sectors ------------------
+    if (_isRear) then {
+        {
+            if (_x isKindOf "Man") then {
+                _x setVariable ["KPLIB_homeSector", _sector, false];
+                _x addEventHandler ["Killed", {
+                    params ["_dead"];
+                    private _sec = _dead getVariable ["KPLIB_homeSector", ""];
+                    if (_sec == "") exitWith {};
+                    if (isNil "KPLIB_sectorEscalation") then { KPLIB_sectorEscalation = createHashMap; };
+                    private _esc = KPLIB_sectorEscalation get _sec;
+                    if (isNil "_esc") then {_esc = 1};
+                    _esc = _esc + 0.02;                         // +2 % per casualty
+                    if (_esc > 1.5) then {_esc = 1.5};          // 150 % hard cap
+                    KPLIB_sectorEscalation set [_sec, _esc];
+                    publicVariable "KPLIB_sectorEscalation";
+                }];
+            };
+        } forEach _managed_units;
+    };
+    //-----------------------------------------------------------------------
 
     sleep 10;
 

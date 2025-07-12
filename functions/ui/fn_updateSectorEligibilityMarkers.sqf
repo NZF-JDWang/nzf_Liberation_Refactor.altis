@@ -29,11 +29,13 @@ KPLIB_fnc_handleEligibilityUpdate = {
         _x setMarkerAlphaLocal 0.5;
     } forEach (sectors_allSectors - blufor_sectors);
 
-    // 2.  Remove previous connector lines and overlay markers
+    // Make sure friendly sectors are fully opaque
     {
-        deleteMarkerLocal _x;
-    } forEach KPLIB_sectorEligibleLines;
-    KPLIB_sectorEligibleLines = [];
+        _x setMarkerAlphaLocal 1;
+    } forEach blufor_sectors;
+
+    // 2.  Remove previous overlay markers but KEEP historical connector lines
+    // Lines show the path of advance, so we leave them untouched to visualise progress.
 
     {
         deleteMarkerLocal _x;
@@ -41,15 +43,24 @@ KPLIB_fnc_handleEligibilityUpdate = {
     KPLIB_sectorEligibleOverlays = [];
 
     // 3.  For each capturable enemy sector draw connector line and overlay ring
+    //    We also ensure the history lines (previously captured sectors) remain visible.
+
+    private _allPairs = _pairs;
+    if (!isNil "KPLIB_captureLineHistory") then {
+        {
+            private _enemy = _x select 0;
+            if (!(_enemy in (_pairs apply { _x select 0 }))) then {
+                _allPairs pushBack _x;
+            };
+        } forEach KPLIB_captureLineHistory;
+    };
+
     {
         _x params ["_enemyMarker", "_source"];
 
-        diag_log format ["EligibilityUI: capturable %1", _enemyMarker];
-
-        // Source position (can be marker name or raw position array)
+        // If line already drawn we will recreate to ensure consistency
+        // Build polyline ... (duplicate of original code)
         private _srcPos = if (_source isEqualType "") then { markerPos _source } else { _source };
-
-        // Build a simple polyline marker
         private _lineName = format ["KPLIB_line_%1", _enemyMarker];
         deleteMarkerLocal _lineName;
         private _line = createMarkerLocal [_lineName, _srcPos];
@@ -66,6 +77,17 @@ KPLIB_fnc_handleEligibilityUpdate = {
         _line setMarkerTypeLocal "mil_line";
 
         KPLIB_sectorEligibleLines pushBack _line;
+
+    } forEach _allPairs;
+
+    // Add overlay only for currently capturable sectors
+    {
+        _x params ["_enemyMarker", "_source"];
+        if (!(_enemyMarker in ( _pairs apply { _x select 0 }))) exitWith {};
+
+        // Make the base sector marker fully opaque with OPFOR colour
+        _enemyMarker setMarkerColorLocal GRLIB_color_enemy;
+        _enemyMarker setMarkerAlphaLocal 1;
 
         // Add overlay ring to highlight capturable sector
         private _ovName = format ["KPLIB_cap_%1", _enemyMarker];

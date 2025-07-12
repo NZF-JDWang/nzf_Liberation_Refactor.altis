@@ -217,5 +217,6 @@ if (!isNil "KPLIB_sectorStates") then {
     _allMines,
     _allCrates,
     KPLIB_sectorTowers,
-    _savedSectorStates
+    _savedSectorStates,
+    (if (isNil "KPLIB_captureLineHistory") then {[]} else {KPLIB_captureLineHistory})
 ] // return

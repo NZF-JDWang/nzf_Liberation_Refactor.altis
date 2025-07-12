@@ -197,6 +197,7 @@ if (!isNil "_saveData") then {
         _allCrates                                  = _saveData param [20, []];
         KPLIB_sectorTowers                          = _saveData param [21, []];
         private _savedSectorStates                   = _saveData param [22, []];
+        KPLIB_captureLineHistory                     = _saveData param [23, []];
 
         // Rebuild hashmap from serialised array
         KPLIB_sectorStates = createHashMap;

@@ -69,3 +69,16 @@ if (blufor_sectors isEqualTo []) then {
 // Publish the result so every client can refresh markers
 KPLIB_captureEligiblePairs = _eligiblePairs;
 publicVariable "KPLIB_captureEligiblePairs";
+
+// ---------------------------------------------------------
+// Maintain persistent history of pairs for progress lines
+if (isNil "KPLIB_captureLineHistory") then { KPLIB_captureLineHistory = [] };
+{
+    private _enemy = _x select 0;
+    // Add only once
+    if (!(_enemy in (KPLIB_captureLineHistory apply { _x select 0 }))) then {
+        KPLIB_captureLineHistory pushBack _x;
+    };
+} forEach _eligiblePairs;
+publicVariable "KPLIB_captureLineHistory";
+// ---------------------------------------------------------

@@ -23,6 +23,37 @@ stats_sectors_liberated = stats_sectors_liberated + 1;
 // Broadcast refresh to clients
 [] remoteExec ["KPLIB_fnc_handleEligibilityUpdate", 0, true];
 
+// Add captured sector connection to line history so it persists after reload
+if (isNil "KPLIB_captureLineHistory") then { KPLIB_captureLineHistory = [] };
+// Find the last pair that referenced this sector (if any)
+private _prevPair = [];
+if (!isNil "KPLIB_captureEligiblePairs") then {
+    {
+        if ((_x select 0) == _liberated_sector) exitWith { _prevPair = _x };
+    } forEach KPLIB_captureEligiblePairs;
+};
+if (!(_prevPair isEqualTo [])) then {
+    // Ensure uniqueness and store
+    if (!((_prevPair select 0) in (KPLIB_captureLineHistory apply { _x select 0 }))) then {
+        KPLIB_captureLineHistory pushBack _prevPair;
+        publicVariable "KPLIB_captureLineHistory";
+    };
+};
+
+// --- Escalation decay: capture progress reduces over-garrisoned rear sectors ---
+if (isNil "KPLIB_sectorEscalation") then { KPLIB_sectorEscalation = createHashMap; };
+{
+    private _esc = KPLIB_sectorEscalation get _x;
+    if (isNil "_esc") then {_esc = 1};
+    if (_esc > 1) then {
+        _esc = _esc - 0.2;              // -20 % per captured sector
+        if (_esc < 1) then {_esc = 1};
+        KPLIB_sectorEscalation set [_x, _esc];
+    };
+} forEach (sectors_allSectors - blufor_sectors - [_liberated_sector]);
+publicVariable "KPLIB_sectorEscalation";
+// -----------------------------------------------------------------------------
+
 reset_battlegroups_ai = true; publicVariable "reset_battlegroups_ai";
 
 if (_liberated_sector in sectors_factory) then {
