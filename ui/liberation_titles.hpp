@@ -131,7 +131,8 @@ class RscTitles {
             BGPictureActiveSectors, BGPictureSector,
             CaptureFrame_OPFOR, CaptureFrame_BLUFOR, CaptureFrame,
             LabelPoint, CentralShadow, CentralLabel,
-            ActiveSectors, AlertBGPicture, AlertLabel, AlertTimer
+            ActiveSectors, AlertBGPicture, AlertLabel, AlertTimer,
+            LabelOutOfSupply
         };
         class BGPicture {
             idc = 758001;
@@ -468,6 +469,13 @@ class RscTitles {
             y = 0.29 * safezoneH + safezoneY;
             h = 0.03 * safezoneH;
             colorText[] = {0.85, 0, 0, 1};
+        };
+        class LabelOutOfSupply: CentralLabel {
+            idc = 268;
+            y = 0.05 * safezoneH + safezoneY;
+            w = 1 * safezoneW;
+            text = "";
+            colorText[] = {1,0,0,1};
         };
     };
 };

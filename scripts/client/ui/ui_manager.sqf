@@ -142,6 +142,23 @@ while {true} do {
                     _zone_size = GRLIB_capture_size * 1.4;
                 };
 
+                // Determine capturability
+                private _capturableEnemies = if (isNil "KPLIB_captureEligiblePairs") then { [] } else { (KPLIB_captureEligiblePairs apply { _x select 0 }) };
+                private _showOutBanner = false;
+                if !(_nearest_active_sector in blufor_sectors) then {
+                    if !(_nearest_active_sector in _capturableEnemies) then {
+                        _showOutBanner = true;
+                    };
+                };
+
+                private _outCtrl = _overlay displayCtrl 268;
+                if (_showOutBanner) then {
+                    _outCtrl ctrlSetText "Sector beyond supply lines – capture impossible";
+                    _outCtrl ctrlShow true;
+                } else {
+                    _outCtrl ctrlShow false;
+                };
+
                 "zone_capture" setmarkerposlocal (markerpos _nearest_active_sector);
                 _colorzone = "ColorGrey";
                 if ( [ markerpos _nearest_active_sector, _zone_size ] call KPLIB_fnc_getSectorOwnership == GRLIB_side_friendly ) then { _colorzone = GRLIB_color_friendly };
