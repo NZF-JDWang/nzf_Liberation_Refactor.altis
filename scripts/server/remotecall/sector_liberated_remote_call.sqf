@@ -13,8 +13,20 @@ combat_readiness = combat_readiness + _combat_readiness_increase;
 if (combat_readiness > 100.0 && GRLIB_difficulty_modifier <= 2.0) then {combat_readiness = 100.0};
 stats_readiness_earned = stats_readiness_earned + _combat_readiness_increase;
 
-[_liberated_sector, 0] remoteExecCall ["remote_call_sector"];
 blufor_sectors pushback _liberated_sector; publicVariable "blufor_sectors";
+
+// FOURTH_EDIT - Change marker visuals to friendly variant globally
+private _origType = markerType _liberated_sector;
+private _newType = _origType;
+if ((_origType select [0,2]) in ["o_", "n_"]) then {
+    // Convert o_mytype -> b_mytype (take substring after first 2 chars)
+    private _suffix = _origType select [2, (count _origType) - 2];
+    _newType = ("b_" + _suffix);
+};
+_liberated_sector setMarkerType _newType;
+_liberated_sector setMarkerColor GRLIB_color_friendly;
+
+[_liberated_sector, 0] remoteExecCall ["remote_call_sector"];
 stats_sectors_liberated = stats_sectors_liberated + 1;
 
 // Recalculate capture eligibility so clients update their maps

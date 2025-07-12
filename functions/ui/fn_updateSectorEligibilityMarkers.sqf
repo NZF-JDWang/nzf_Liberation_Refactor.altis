@@ -29,8 +29,9 @@ KPLIB_fnc_handleEligibilityUpdate = {
         _x setMarkerAlphaLocal 0.5;
     } forEach (sectors_allSectors - blufor_sectors);
 
-    // Make sure friendly sectors are fully opaque
+    // Make sure friendly sectors are fully opaque with friendly color
     {
+        _x setMarkerColorLocal GRLIB_color_friendly;
         _x setMarkerAlphaLocal 1;
     } forEach blufor_sectors;
 
@@ -83,22 +84,22 @@ KPLIB_fnc_handleEligibilityUpdate = {
     // Add overlay only for currently capturable sectors
     {
         _x params ["_enemyMarker", "_source"];
-        if (!(_enemyMarker in ( _pairs apply { _x select 0 }))) exitWith {};
+        if !(_enemyMarker in blufor_sectors) then {
+            // Make the base sector marker fully opaque with OPFOR colour
+            _enemyMarker setMarkerColorLocal GRLIB_color_enemy;
+            _enemyMarker setMarkerAlphaLocal 1;
 
-        // Make the base sector marker fully opaque with OPFOR colour
-        _enemyMarker setMarkerColorLocal GRLIB_color_enemy;
-        _enemyMarker setMarkerAlphaLocal 1;
+            // Add overlay ring to highlight capturable sector
+            private _ovName = format ["KPLIB_cap_%1", _enemyMarker];
+            deleteMarkerLocal _ovName;
+            private _ov = createMarkerLocal [_ovName, markerPos _enemyMarker];
+            _ov setMarkerTypeLocal "selector_selectedMission";
+            _ov setMarkerColorLocal GRLIB_color_enemy_bright; // bright red ring
+            _ov setMarkerAlphaLocal 0.8;
+            _ov setMarkerSizeLocal [2,2];
 
-        // Add overlay ring to highlight capturable sector
-        private _ovName = format ["KPLIB_cap_%1", _enemyMarker];
-        deleteMarkerLocal _ovName;
-        private _ov = createMarkerLocal [_ovName, markerPos _enemyMarker];
-        _ov setMarkerTypeLocal "selector_selectedMission";
-        _ov setMarkerColorLocal GRLIB_color_enemy_bright; // bright red ring
-        _ov setMarkerAlphaLocal 0.8;
-        _ov setMarkerSizeLocal [2,2];
-
-        KPLIB_sectorEligibleOverlays pushBack _ov;
+            KPLIB_sectorEligibleOverlays pushBack _ov;
+        };
     } forEach _pairs;
 };
 

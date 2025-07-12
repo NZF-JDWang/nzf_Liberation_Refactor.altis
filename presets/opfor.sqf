@@ -1,10 +1,3 @@
-/*
-    Needed Mods:
-    - None
-
-    Optional Mods:
-    - None
-*/
 
 // Enemy infantry classes
 opfor_officer = "O_officer_F";                                          // Officer
