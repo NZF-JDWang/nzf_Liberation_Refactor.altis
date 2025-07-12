@@ -8,7 +8,7 @@ sleep 1;
 private _transGrp = (group (driver _transVeh));
 private _start_pos = getpos _transVeh;
 private _objPos =  [getpos _transVeh] call KPLIB_fnc_getNearestBluforObjective;
-private _unload_distance = 500;
+private _unload_distance = 250 + (random 250);    // randomize between 250 and 500 metres
 private _crewcount = count crew _transVeh;
 
 waitUntil {

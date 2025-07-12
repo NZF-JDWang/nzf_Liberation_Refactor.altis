@@ -16,11 +16,11 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=1033;
+		nextID=1060;
 	};
 	class Camera
 	{
-		pos[]={27405.098,69.24128,5272.2231};
+		pos[]={27412.477,61.368061,5286.9312};
 		dir[]={0.41671693,-0.42856973,0.80167025};
 		up[]={0.19766523,0.90350866,0.38026372};
 		aside[]={0.88728553,0,-0.46122071};
@@ -161,6 +161,7 @@ class ScenarioData
 	author="[GREUH] Zbug, [GREUH] McKeewa, [KP] Wyqer";
 	respawnDialog=0;
 	disabledAI=1;
+	joinUnassigned=0;
 	respawn=3;
 	respawnDelay=5;
 	class Header
@@ -173,6 +174,35 @@ class ScenarioData
 class CustomAttributes
 {
 	class Category0
+	{
+		name="Multiplayer";
+		class Attribute0
+		{
+			property="RespawnTemplates";
+			expression="true";
+			class Value
+			{
+				class data
+				{
+					singleType="ARRAY";
+					class value
+					{
+						items=1;
+						class Item0
+						{
+							class data
+							{
+								singleType="STRING";
+								value="Counter";
+							};
+						};
+					};
+				};
+			};
+		};
+		nAttributes=1;
+	};
+	class Category1
 	{
 		name="Scenario";
 		class Attribute0

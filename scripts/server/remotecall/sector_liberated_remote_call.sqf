@@ -17,6 +17,12 @@ stats_readiness_earned = stats_readiness_earned + _combat_readiness_increase;
 blufor_sectors pushback _liberated_sector; publicVariable "blufor_sectors";
 stats_sectors_liberated = stats_sectors_liberated + 1;
 
+// Recalculate capture eligibility so clients update their maps
+[] call KPLIB_fnc_updateCaptureEligibility;
+
+// Broadcast refresh to clients
+[] remoteExec ["KPLIB_fnc_handleEligibilityUpdate", 0, true];
+
 reset_battlegroups_ai = true; publicVariable "reset_battlegroups_ai";
 
 if (_liberated_sector in sectors_factory) then {

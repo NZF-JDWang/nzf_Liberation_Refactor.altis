@@ -28,6 +28,9 @@ while {true} do {
     {_x setMarkerColorLocal GRLIB_color_enemy;} forEach (sectors_allSectors - blufor_sectors);
     {_x setMarkerColorLocal GRLIB_color_friendly;} forEach blufor_sectors;
 
+    // Re-apply capture eligibility highlighting so our colours override the default ones
+    if (!isNil "KPLIB_fnc_handleEligibilityUpdate") then { [] call KPLIB_fnc_handleEligibilityUpdate; };
+
     {
         _x params ["_marker", "_base"];
         _marker setMarkerColorLocal ([GRLIB_color_enemy, GRLIB_color_friendly] select (_base in blufor_sectors));

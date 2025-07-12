@@ -6,6 +6,18 @@ private [ "_fob_building", "_fob_pos" ];
 GRLIB_all_fobs pushback _new_fob;
 publicVariable "GRLIB_all_fobs";
 
+// Capture the very first FOB position for eligibility calculations
+if (isNil "KPLIB_firstFOBPos") then {
+    KPLIB_firstFOBPos = _new_fob;
+    publicVariable "KPLIB_firstFOBPos";
+};
+
+// Recompute capture eligibility
+[] call KPLIB_fnc_updateCaptureEligibility;
+
+// Tell all clients to refresh their markers immediately
+[] call KPLIB_fnc_handleEligibilityUpdate;
+
 if ( _create_fob_building ) then {
     _fob_pos = [ (_new_fob select 0) + 15, (_new_fob select 1) + 2, 0 ];
     [_fob_pos, 20, true] call KPLIB_fnc_createClearance;

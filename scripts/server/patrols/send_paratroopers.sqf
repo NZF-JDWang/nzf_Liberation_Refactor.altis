@@ -23,7 +23,7 @@ if (isNull _chopper_type) then {
     createVehicleCrew _newvehicle;
     sleep 0.1;
 
-    _pilot_group = createGroup [GRLIB_side_enemy, true];
+    _pilot_group = createGroup [KPLIB_side_enemy, true];
     (crew _newvehicle) joinSilent _pilot_group;
 
     _newvehicle addMPEventHandler ["MPKilled", {_this spawn kill_manager}];
@@ -33,13 +33,15 @@ if (isNull _chopper_type) then {
     _pilot_group = group _newvehicle;
 };
 
-private _para_group = createGroup [GRLIB_side_enemy, true];
+private _para_group = createGroup [KPLIB_side_enemy, true];
 
 while {(count (units _para_group)) < 8} do {
-    [opfor_paratrooper, markerPos _spawnsector, _para_group] call KPLIB_fnc_createManagedUnit;
+    [KPLIB_o_paratrooper, markerPos _spawnsector, _para_group] call KPLIB_fnc_createManagedUnit;
 };
-
-{removeBackpack _x; _x addBackPack "B_parachute"; _x moveInCargo _newvehicle;} forEach (units _para_group);
+{_x assignAsCargo _newvehicle;} forEach (units _para_group);
+sleep 0.2;
+{removeBackpack _x; _x addBackPack "B_parachute";  _x moveInCargo _newvehicle;} forEach (units _para_group);
+_newvehicle setVehicleLock "LOCKED";
 
 while {(count (waypoints _pilot_group)) != 0} do {deleteWaypoint ((waypoints _pilot_group) select 0);};
 while {(count (waypoints _para_group)) != 0} do {deleteWaypoint ((waypoints _para_group) select 0);};
@@ -47,6 +49,7 @@ sleep 0.2;
 {_x doFollow leader _pilot_group} forEach units _pilot_group;
 {_x doFollow leader _para_group} forEach units _para_group;
 sleep 0.2;
+
 
 _newvehicle flyInHeight 100;
 
@@ -73,16 +76,8 @@ _waypoint setWaypointType "MOVE";
 _waypoint setWaypointCompletionRadius 100;
 _pilot_group setCurrentWaypoint [_pilot_group, 1];
 
-_waypoint = _para_group addWaypoint [_targetpos, 100];
-_waypoint setWaypointType "MOVE";
-_waypoint setWaypointSpeed "NORMAL";
-_waypoint setWaypointBehaviour "COMBAT";
-_waypoint setWaypointCombatMode "YELLOW";
-_waypoint setWaypointCompletionRadius 50;
-_waypoint = _para_group addWaypoint [_targetpos, 100];
-_waypoint setWaypointType "MOVE";
-_waypoint setWaypointCompletionRadius 50;
-_pilot_group setCurrentWaypoint [_para_group, 1];
+
+[_para_group, 500] spawn lambs_wp_fnc_taskRush;
 
 _newvehicle flyInHeight 100;
 
@@ -91,7 +86,7 @@ waitUntil {sleep 1;
 };
 
 _newvehicle flyInHeight 100;
-
+_newvehicle setVehicleLock "UNLOCKED";
 {
     unassignVehicle _x;
     moveout _x;
@@ -108,6 +103,7 @@ sleep 0.2;
 {_x doFollow leader _para_group} foreach units _para_group;
 sleep 0.2;
 
+_newvehicle setVehicleLock "LOCKED";
 _newvehicle flyInHeight 100;
 
 _waypoint = _pilot_group addWaypoint [_targetpos, 200];
@@ -137,4 +133,4 @@ _waypoint = _para_group addWaypoint [_targetpos, 100];
 _waypoint setWaypointType "SAD";
 _waypoint = _para_group addWaypoint [_targetpos, 100];
 _waypoint setWaypointType "SAD";
-_pilot_group setCurrentWaypoint [_para_group, 1];
+_pilot_group setCurrentWaypoint [_pilot_group, 1];

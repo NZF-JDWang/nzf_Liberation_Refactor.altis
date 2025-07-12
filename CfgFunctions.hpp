@@ -87,6 +87,7 @@ class KPLIB {
         // Save / Restore sector state
         class saveSectorState          {};
         class restoreSectorState       {};
+        class updateCaptureEligibility    {};
     };
     class functions_curator {
         file = "functions\curator";
@@ -100,6 +101,9 @@ class KPLIB {
         file = "functions\ui";
 
         class overlayUpdateResources    {};
+        class updateSectorEligibilityMarkers {
+            postInit = 1;
+        };
     };
     #include "scripts\client\CfgFunctions.hpp"
     #include "scripts\server\CfgFunctions.hpp"

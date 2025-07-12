@@ -49,6 +49,11 @@ if ( GRLIB_endgame == 0 ) then {
     if ( _attacktime <= 1 && ( [markerpos _sector] call KPLIB_fnc_getSectorOwnership == GRLIB_side_enemy ) ) then {
         blufor_sectors = blufor_sectors - [ _sector ];
         publicVariable "blufor_sectors";
+
+        // Recalculate capture eligibility because the front changed
+        [] call KPLIB_fnc_updateCaptureEligibility;
+        [] remoteExec ["KPLIB_fnc_handleEligibilityUpdate", 0, true];
+
         [_sector, 2] remoteExec ["remote_call_sector"];
         reset_battlegroups_ai = true;
         [] spawn KPLIB_fnc_doSave;

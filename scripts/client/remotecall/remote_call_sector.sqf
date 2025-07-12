@@ -28,3 +28,6 @@ if ( _status == 3 ) then {
 
 { _x setMarkerColorLocal GRLIB_color_enemy; } foreach (sectors_allSectors - blufor_sectors);
 { _x setMarkerColorLocal GRLIB_color_friendly; } foreach blufor_sectors;
+
+// Ensure capturable sectors remain highlighted
+if (!isNil "KPLIB_fnc_handleEligibilityUpdate") then { [] call KPLIB_fnc_handleEligibilityUpdate; };

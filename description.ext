@@ -247,10 +247,10 @@ class CfgTaskDescriptions {
 #include "GREUH\UI\GREUH_interface.hpp"
 #include "KP\KPGUI\KPGUI_defines.hpp"
 #include "KP\KPPLM\ui\KPPLM_dialog.hpp"
-
+// CBA Extended Event Handlers
 class Extended_PreInit_EventHandlers {
     class KPLIB_Settings {
-        init = "call compile preprocessFileLineNumbers 'cba_settings.sqf'";
+        init = "call compile preprocessFileLineNumbers 'XEH_preinit.sqf'";
     };
 };
 

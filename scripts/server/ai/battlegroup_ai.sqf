@@ -13,6 +13,9 @@ private _objPos = [getPos (leader _grp)] call KPLIB_fnc_getNearestBluforObjectiv
 
 private _startpos = getPos (leader _grp);
 
+(leader _grp) setVariable ["lambs_danger_dangerRadio", true];
+_grp setVariable ["lambs_danger_enableGroupReinforce", true, true];
+
 private _waypoint = [];
 while {((getPos (leader _grp)) distance _startpos) < 100} do {
 
@@ -48,6 +51,6 @@ waitUntil {
 sleep (5 + (random 5));
 reset_battlegroups_ai = false;
 
-if (!((units _grp) isEqualTo []) && (GRLIB_endgame == 0)) then {
+if (!((units _grp) isEqualTo []) && (KPLIB_endgame == 0)) then {
     [_grp] spawn battlegroup_ai;
 };

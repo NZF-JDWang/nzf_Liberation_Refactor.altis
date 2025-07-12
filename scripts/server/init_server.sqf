@@ -126,3 +126,12 @@ execVM "scripts\server\offloading\group_diag.sqf";
 if (KP_liberation_restart > 0) then {
     execVM "scripts\server\game\server_restart.sqf";
 };
+
+// ----- Capture eligibility system init -----
+if (isServer) then {
+    [] spawn {
+        waitUntil { !isNil "save_is_loaded" && {save_is_loaded} };
+        [] call KPLIB_fnc_updateCaptureEligibility;
+        [] remoteExec ["KPLIB_fnc_handleEligibilityUpdate", 0, true];
+    };
+};

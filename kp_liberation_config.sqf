@@ -201,6 +201,7 @@ GRLIB_respawn_marker = "respawn";                                       // Respa
 GRLIB_color_friendly = "ColorBLUFOR";                                   // Friendly sector marker color.
 GRLIB_color_enemy = "ColorOPFOR";                                       // Enemy sector marker color.
 GRLIB_color_enemy_bright = "ColorRED";                                  // Enemy sector marker color (activated).
+GRLIB_color_capture_line = "ColorBLUFOR";                          // Line colour from frontline to capturable sector
 
 GRLIB_fob_range = 125;                                                  // Build range around the main FOB building.
 GRLIB_halo_altitude = 2500;                                             // Altitude in metres for the HALO jump.

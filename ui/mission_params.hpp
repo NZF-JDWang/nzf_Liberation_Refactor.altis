@@ -237,7 +237,7 @@ class Params {
         title = $STR_PARAMS_MOBILERESPAWN;
         values[] = {0, 1};
         texts[] = {$STR_PARAMS_DISABLED, $STR_PARAMS_ENABLED};
-        default = 1;
+        default = 0;
     };
     class RespawnCooldown {
         title = $STR_PARAM_RESPAWN_COOLDOWN;
