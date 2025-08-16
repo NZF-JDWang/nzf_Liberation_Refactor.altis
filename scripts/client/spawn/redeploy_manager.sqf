@@ -217,10 +217,6 @@ while {true} do {
         };
     };
 
-    if (KP_liberation_arsenalUsePreset) then {
-        [_backpack] call KPLIB_fnc_checkGear;
-    };
-
     if (KP_liberation_mobilerespawn && (KP_liberation_respawn_time > time)) then {
         hint format [localize "STR_RESPAWN_COOLDOWN_HINT", ceil ((KP_liberation_respawn_time - time) / 60)];
         uiSleep 12;

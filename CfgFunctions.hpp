@@ -55,6 +55,7 @@ class KPLIB {
         class getSectorOwnership        {};
         class getSectorRange            {};
         class getSquadComp              {};
+        class buildSquad                {};
         class getStoragePositions       {};
         class getUnitPositionId         {};
         class getUnitsCount             {};
@@ -83,6 +84,9 @@ class KPLIB {
         class spawnMilitiaCrew          {};
         class spawnRegularSquad         {};
         class spawnVehicle              {};
+        class placeBunkers              {};
+        class placeSectorStatics        {};
+        class spawnMortarSection        {};
         class swapInventory             {};
         // Save / Restore sector state
         class saveSectorState          {};

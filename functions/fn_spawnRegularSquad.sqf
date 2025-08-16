@@ -48,4 +48,7 @@ private _grp = createGroup [GRLIB_side_enemy, true];
     };
 } forEach _classnames;
 
+// Enable LAMBS reinforcement behavior for the spawned squad
+_grp setVariable ["lambs_danger_enableGroupReinforce", true, true];
+
 _grp

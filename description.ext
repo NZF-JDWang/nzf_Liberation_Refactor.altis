@@ -40,7 +40,7 @@ briefingName = $STR_MISSION_TITLE;
 overviewPicture = "res\lib.paa";
 
 // Text to be displayed below the overviewPicture on the mission selection screen
-overviewText = "www.killahpotatoes.de";
+overviewText = "www.NZFGaming.com";
 
 
 /*
@@ -56,7 +56,7 @@ onLoadName = $STR_MISSION_TITLE;
 loadScreen = "res\lib.paa";
 
 // Displays a message while the mission is loading below the loadScreen picture.
-onLoadMission = "www.killahpotatoes.de";
+onLoadMission = "www.NZFGaming.com";
 
 
 /*
@@ -181,7 +181,7 @@ joinUnassigned = 1;
 // When enabled, joining player will join the mission bypassing role selection screen.
 // The joinUnassigned param will be set to 1 automatically, so that player receives 1st available role from mission template.
 // When leaving such mission, player will go straight back to server browser.
-skipLobby = 0;
+skipLobby = 1;
 
 // Defines if the map is shown after the mission starts.
 showMap = 1;
@@ -230,6 +230,8 @@ class CfgDiscordRichPresence {
 class CfgFunctions {
     #include "CfgFunctions.hpp"
     #include "KP\KPPLM\KPPLM_functions.hpp"
+    #include "vcom\cfgFunctions.hpp"
+    #include "Functions.hpp"
 };
 
 class CfgRespawnTemplates {
@@ -254,3 +256,5 @@ class Extended_PreInit_EventHandlers {
     };
 };
 
+#include "GUI\masterHandler.hpp"
+#include "Config\Config_Groups.hpp"

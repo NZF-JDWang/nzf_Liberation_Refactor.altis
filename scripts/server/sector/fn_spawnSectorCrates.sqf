@@ -30,15 +30,19 @@ if !(_sector in KPLIB_sectorCratesSpawned) then {
     private _amount = (ceil (random 3)) * GRLIB_resources_multiplier;
     private _spawnPos = [];
     private _j = 0;
+    // Wider sampling ring to increase chance of valid positions without extra attempts
+    private _ringMin = 30;   // avoid exact center
+    private _ringMax = 180;  // was 50; broadened to cover more open space
 
     for "_i" from 1 to _amount do {
         while {_spawnPos isEqualTo []} do {
             _j = _j + 1;
-            _spawnPos = ((markerPos _sector) getPos [random 50, random 360]) findEmptyPosition [10, 40, KP_liberation_ammo_crate];
+            private _samplePos = (markerPos _sector) getPos [(_ringMin + random (_ringMax - _ringMin)), random 360];
+            _spawnPos = _samplePos findEmptyPosition [10, 40, KP_liberation_ammo_crate];
             if (_j isEqualTo 10) exitWith {};
         };
         if !(_spawnPos isEqualTo []) then {
-            [selectRandom KPLIB_crates, 100, _spawnpos] call KPLIB_fnc_createCrate;
+            [selectRandom KPLIB_crates, 100, _spawnPos] call KPLIB_fnc_createCrate;
             _spawnPos = [];
         } else {
             ["No suitable spawn position found."] call BIS_fnc_error;

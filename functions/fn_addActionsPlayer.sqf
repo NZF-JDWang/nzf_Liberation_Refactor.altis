@@ -23,21 +23,7 @@ if !(isPlayer _player) exitWith {["No player given"] call BIS_fnc_error; false};
 
 if (isNil "KP_liberation_resources_global") then {KP_liberation_resources_global = false;};
 
-// Tutorial
-_player addAction [
-    ["<t color='#80FF80'>", localize "STR_TUTO_ACTION", "</t>"] joinString "",
-    {howtoplay = 1;},
-    nil,
-    -700,
-    false,
-    true,
-    "",
-    "
-        alive _originalTarget
-        && {_originalTarget getVariable ['KPLIB_isNearStart', false]}
-    "
-];
-
+/*
 // HALO
 _player addAction [
     ["<t color='#80FF80'>", localize "STR_HALO_ACTION", "</t><img size='2' image='res\ui_redeploy.paa'/>"] joinString "",
@@ -58,7 +44,7 @@ _player addAction [
         && {build_confirmed isEqualTo 0}
     "
 ];
-
+*/
 // Redeploy
 _player addAction [
     ["<t color='#80FF80'>", localize "STR_DEPLOY_ACTION", "</t><img size='2' image='res\ui_redeploy.paa'/>"] joinString "",
@@ -79,7 +65,7 @@ _player addAction [
         && {build_confirmed isEqualTo 0}
     "
 ];
-
+/*
 // Squad management
 _player addAction [
     ["<t color='#80FF80'>", localize "STR_SQUAD_MANAGEMENT_ACTION", "</t><img size='2' image='\a3\Ui_F_Curator\Data\Displays\RscDisplayCurator\modeGroups_ca.paa'/>"] joinString "",
@@ -119,7 +105,7 @@ _player addAction [
         && {build_confirmed isEqualTo 0}
     "
 ];
-
+*/
 // Build
 _player addAction [
     ["<t color='#FFFF00'>", localize "STR_BUILD_ACTION", "</t><img size='2' image='res\ui_build.paa'/>"] joinString "",
@@ -333,7 +319,7 @@ _player addAction [
         && {build_confirmed isEqualTo 0}
     "
 ];
-
+/*
 // Reassign Zeus
 if (player == ([] call KPLIB_fnc_getCommander)) then {
     _player addAction [
@@ -351,7 +337,7 @@ if (player == ([] call KPLIB_fnc_getCommander)) then {
         "
     ];
 };
-
+*/
 // Create FOB clearance
 _player addAction [
     ["<t color='#FFFF00'>", localize "STR_CLEARANCE_ACTION", "</t>"] joinString "",

@@ -42,4 +42,7 @@ private _units = [];
     _units pushback _unit;
 } forEach _allPosts;
 
+// Enable LAMBS reinforcement behavior for the post squad
+_grp setVariable ["lambs_danger_enableGroupReinforce", true, true];
+
 _units

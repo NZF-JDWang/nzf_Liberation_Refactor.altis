@@ -191,6 +191,17 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
         _building_ai_max = round (_building_ai_max * ([] call KPLIB_fnc_getOpforFactor));
     };
 
+    // --- Place defensive structures first so units can use them immediately ---
+    private _placedDef = [_sector] call KPLIB_fnc_placeBunkers;
+    _managed_units append _placedDef;
+    private _placedStatics = [_sector, _placedDef] call KPLIB_fnc_placeSectorStatics;
+    _managed_units append _placedStatics;
+    // Mortars are not placed for radio tower sectors
+    if (!(_sector in sectors_tower)) then {
+        private _mortars = [_sector] call KPLIB_fnc_spawnMortarSection;
+        _managed_units append _mortars;
+    };
+
     {
         _vehicle = [_sectorpos, _x] call KPLIB_fnc_spawnVehicle;
         [group ((crew _vehicle) select 0),_sectorpos] spawn add_defense_waypoints;

@@ -45,6 +45,10 @@ while { GRLIB_endgame == 0 } do {
         _grp = group ((crew _vehicle_object) select 0);
     };
 
+    // Enable LAMBS reinforcement behavior for all patrol groups
+    if (!isNull _grp) then {
+        _grp setVariable ["lambs_danger_enableGroupReinforce", true, true];
+    };
     [_grp] spawn patrol_ai;
 
     _started_time = time;

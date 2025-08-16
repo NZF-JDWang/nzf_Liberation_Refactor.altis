@@ -30,6 +30,38 @@ opfor_fuel_container = "Land_Pod_Heli_Transport_04_fuel_F";             // Taru 
 opfor_ammo_container = "Land_Pod_Heli_Transport_04_ammo_F";             // Taru Ammo Pod
 opfor_flag = "Flag_CSAT_F";                                             // Flag
 
+// Enemy static weapons for sectors
+// Static low for open areas
+opfor_static_low = [
+    "O_HMG_01_F",                                                     // HMG (Low)
+    "O_GMG_01_F",                                                     // GMG (Low)
+    "O_static_AT_F",                                                  // Static AT
+    "O_static_AA_F"                                                   // Static AA
+];
+
+// Static high for bunkers etc.
+opfor_static_high = [
+    "O_HMG_01_high_F",                                                // HMG (High)
+    "O_GMG_01_high_F"                                                 // GMG (High)
+];
+
+// Mortars handled differently
+opfor_mortars = [
+    "O_Mortar_01_F"                                                   // Mk6 Mortar
+];
+
+// Artillery at high aggression handled differently
+opfor_artillery = [
+    "O_MBT_02_arty_F"                                                   // Mk6 Mortar
+];
+
+// Bunker structures for sectors (e.g., for high static placements)
+opfor_bunkers = [
+    "Land_BagBunker_Small_F",                                        // Small Bag Bunker
+    "Land_BagBunker_Tower_F"                                         // Bag Bunker Tower
+];
+
+
 /* Adding a value to these arrays below will add them to a one out of however many in the array, random pick chance.
 Therefore, adding the same value twice or three times means they are more likely to be chosen more often. */
 
@@ -133,3 +165,4 @@ opfor_air = [
     "O_Plane_CAS_02_dynamicLoadout_F",                                  // To-199 Neophron (CAS)
     "O_Plane_Fighter_02_F"                                              // To-201 Shikra
 ];
+

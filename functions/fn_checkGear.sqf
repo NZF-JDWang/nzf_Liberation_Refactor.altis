@@ -17,7 +17,8 @@
     Returns:
         Player checked without findings [BOOL]
 */
-
+if (true) exitwith {true};
+/**/
 params [
     ["_backpack", "", [""]]
 ];

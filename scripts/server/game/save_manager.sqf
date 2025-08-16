@@ -7,6 +7,9 @@ private _start = diag_tickTime;
 if (GRLIB_param_wipe_savegame_1 == 1 && GRLIB_param_wipe_savegame_2 == 1) then {
     profileNamespace setVariable [GRLIB_save_key,nil];
     saveProfileNamespace;
+    // Also clear any in-memory sector state cache so no stale restores occur
+    KPLIB_sectorStates = createHashMap;
+    publicVariable "KPLIB_sectorStates";
     ["Save wiped via mission parameters", "SAVE"] call KPLIB_fnc_log;
 } else {
     ["No save wipe", "SAVE"] call KPLIB_fnc_log;
@@ -516,6 +519,9 @@ if (!isNil "_saveData") then {
     ["Saved crates placed", "SAVE"] call KPLIB_fnc_log;
 } else {
     ["Save nil", "SAVE"] call KPLIB_fnc_log;
+    // Ensure sector state map starts empty when no save exists
+    KPLIB_sectorStates = createHashMap;
+    publicVariable "KPLIB_sectorStates";
 };
 
 publicVariable "stats_civilian_vehicles_seized";
@@ -574,6 +580,9 @@ while {true} do {
     if (GRLIB_endgame == 1) exitWith {
         profileNamespace setVariable [GRLIB_save_key, nil];
         saveProfileNamespace;
+        // Also clear in-memory sector state cache on campaign end
+        KPLIB_sectorStates = createHashMap;
+        publicVariable "KPLIB_sectorStates";
     };
 
     [] call KPLIB_fnc_doSave;

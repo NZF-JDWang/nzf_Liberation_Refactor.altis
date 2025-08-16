@@ -1,23 +1,11 @@
 [] call compileFinal preprocessFileLineNumbers "scripts\client\misc\init_markers.sqf";
-switch (KP_liberation_arsenal) do {
-    case  1: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\custom.sqf";};
-    case  2: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\rhsusaf.sqf";};
-    case  3: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\3cbBAF.sqf";};
-    case  4: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\gm_west.sqf";};
-    case  5: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\gm_east.sqf";};
-    case  6: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\csat.sqf";};
-    case  7: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\unsung.sqf";};
-    case  8: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\sfp.sqf";};
-    case  9: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\bwmod.sqf";};
-    case  10: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_nato_mtp.sqf";};
-    case  11: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_nato_tropic.sqf";};
-    case  12: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_nato_wdl.sqf";};
-    case  13: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_csat_hex.sqf";};
-    case  14: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_csat_ghex.sqf";};
-    case  15: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_aaf.sqf";};
-    case  16: {[] call compileFinal preprocessFileLineNumbers "arsenal_presets\vanilla_ldf.sqf";};
-    default  {GRLIB_arsenal_weapons = [];GRLIB_arsenal_magazines = [];GRLIB_arsenal_items = [];GRLIB_arsenal_backpacks = [];};
-};
+// Removed arsenal switch, using default (empty arrays)
+GRLIB_arsenal_weapons = [];
+GRLIB_arsenal_magazines = [];
+GRLIB_arsenal_items = [];
+GRLIB_arsenal_backpacks = [];
+
+[] call compileFinal preprocessFileLineNumbers "scripts\client\build\build_overlay.sqf";
 
 if (typeOf player == "VirtualSpectator_F") exitWith {
     execVM "scripts\client\markers\empty_vehicles_marker.sqf";
@@ -43,7 +31,6 @@ execVM "scripts\client\actions\intel_manager.sqf";
 execVM "scripts\client\actions\recycle_manager.sqf";
 execVM "scripts\client\actions\unflip_manager.sqf";
 execVM "scripts\client\ammoboxes\ammobox_action_manager.sqf";
-execVM "scripts\client\build\build_overlay.sqf";
 execVM "scripts\client\build\do_build.sqf";
 execVM "scripts\client\commander\enforce_whitelist.sqf";
 if (KP_liberation_mapmarkers) then {execVM "scripts\client\markers\empty_vehicles_marker.sqf";};
@@ -54,7 +41,7 @@ if (KP_liberation_mapmarkers) then {execVM "scripts\client\markers\huron_marker.
 execVM "scripts\client\markers\sector_manager.sqf";
 execVM "scripts\client\markers\spot_timer.sqf";
 execVM "scripts\client\misc\broadcast_squad_colors.sqf";
-execVM "scripts\client\misc\init_arsenal.sqf";
+//execVM "scripts\client\misc\init_arsenal.sqf";
 execVM "scripts\client\misc\permissions_warning.sqf";
 if (!KP_liberation_ace) then {execVM "scripts\client\misc\resupply_manager.sqf";};
 execVM "scripts\client\misc\secondary_jip.sqf";
@@ -89,6 +76,7 @@ if (!KPLIB_sway) then {
 execVM "scripts\client\ui\intro.sqf";
 
 [player] joinSilent (createGroup [GRLIB_side_friendly, true]);
+player setVariable ["Ace_medical_medicClass", 0];
 
 // Commander init
 if (player isEqualTo ([] call KPLIB_fnc_getCommander)) then {
@@ -104,3 +92,88 @@ if (player isEqualTo ([] call KPLIB_fnc_getCommander)) then {
         };
     };
 };
+
+//Only Allow PJ's to access blood crate
+Fn_IsRestrictedBoxForPlayerAccess = { 
+	params ["_unt", "_box"]; 
+    player getvariable "Ace_medical_medicClass" < 2 && typeOf _box == "nzf_NZBloodbox";
+    };
+
+player addEventHandler ["InventoryOpened", Fn_IsRestrictedBoxForPlayerAccess];
+//*****************************************************************************************************
+// Killed
+player addEventHandler ["Killed", {
+	params ["_unit"];
+	private _uid = getPlayerUID _unit;
+	missionNamespace setVariable [format ["NZF_savedLoadout_%1", _uid], [getUnitLoadout _unit] call acre_api_fnc_filterUnitLoadout];
+	missionNamespace setVariable [format ["NZF_savedTeam_%1", _uid], assignedTeam _unit];
+}];
+
+// Respawn
+player addEventHandler ["Respawn", {
+	params ["_unit"];
+	private _uid = getPlayerUID _unit;
+
+	private _ld = missionNamespace getVariable [format ["NZF_savedLoadout_%1", _uid], nil];
+	if (!isNil "_ld") then {_unit setUnitLoadout _ld;};
+
+	private _team = missionNamespace getVariable [format ["NZF_savedTeam_%1", _uid], nil];
+	if (!isNil "_team") then {_unit assignTeam _team;};
+}];
+//*****************************************************************************************************
+/*
+	Faction: initPlayerLocal.sqf
+	Author: Dom
+	Requires: Start us up
+*/
+
+DT_isACEEnabled = isClass (configFile >> "CfgPatches" >> "ace_common");
+//DT_arsenalBoxes = [arsenal_1];
+
+//***************************************************************************************
+
+player addEventHandler ["Respawn",DT_fnc_onRespawn];
+
+if (DT_isACEEnabled) then {
+	private _groupCategory = [
+		"groupCategory",
+		"Group Menu",
+		"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\meet_ca.paa",
+		{[] call DT_fnc_initGroupMenu},
+		{
+			isNull objectParent player && {((player getVariable ["KPLIB_fobDist", 9999999]) < 50) || (player distance (getMarkerPos "startbase_marker") < 100)}
+		}
+	] call ace_interact_menu_fnc_createAction;
+	[player,1,["ACE_SelfActions"],_groupCategory] call ace_interact_menu_fnc_addActionToObject;
+
+	private _arsenalCategory = [
+		"arsenalCategory",
+		"Arsenal",
+		"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\armor_ca.paa",
+		{			
+			[player,player,false] call ace_arsenal_fnc_openBox},
+		{
+			isNull objectParent player &&
+			{player getVariable ["ace_arsenal_virtualItems",[]] isNotEqualTo [] && 
+			{((player getVariable ["KPLIB_fobDist", 9999999]) < 50) || (player distance (getMarkerPos "startbase_marker") < 100)}}
+		}
+	] call ace_interact_menu_fnc_createAction;
+	[player,1,["ACE_SelfActions"],_arsenalCategory] call ace_interact_menu_fnc_addActionToObject;
+
+	["ace_arsenal_displayClosed",{
+		DT_savedLoadout = getUnitLoadout player;
+		[player, ""] call BIS_fnc_setUnitInsignia;
+       	}] call CBA_fnc_addEventHandler;
+} else {
+	{
+		_x addAction ["Open Group Menu",DT_fnc_initGroupMenu];
+	} forEach DT_arsenalBoxes;
+
+	[missionNamespace,"arsenalClosed",{
+		DT_savedLoadout = getUnitLoadout player;
+		[player, ""] call BIS_fnc_setUnitInsignia;
+	}] call BIS_fnc_addScriptedEventHandler;
+};
+[player, ""] call BIS_fnc_setUnitInsignia;
+["InitializePlayer", [player, true]] call BIS_fnc_dynamicGroups; 
+//***************************************************************************************

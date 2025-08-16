@@ -14,7 +14,6 @@ private _civPreset = if (isNil "KP_liberation_preset_civilians") then {"Unified"
 [format ["Opfor: %1", _opforPreset], "MISSIONSTART"] call KPLIB_fnc_log;
 [format ["Resistance: %1", _resPreset], "MISSIONSTART"] call KPLIB_fnc_log;
 [format ["Civilians: %1", _civPreset], "MISSIONSTART"] call KPLIB_fnc_log;
-[format ["Arsenal: %1", KP_liberation_arsenal], "MISSIONSTART"] call KPLIB_fnc_log;
 [format ["CBA: %1", KPPLM_CBA], "MISSIONSTART"] call KPLIB_fnc_log;
 [format ["ACE: %1", KP_liberation_ace], "MISSIONSTART"] call KPLIB_fnc_log;
 [format ["KP Ranks: %1", KPPLM_KPR], "MISSIONSTART"] call KPLIB_fnc_log;
