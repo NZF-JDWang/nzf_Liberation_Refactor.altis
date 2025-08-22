@@ -143,6 +143,31 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
 
         _building_ai_max = round ((floor (18 + (round (combat_readiness / 4 )))) * _popfactor);
         _building_range = 120;
+
+        // Adjustment: for military sectors, spawn 1 less patrol and 1 more garrison
+        private _removedCount = 0;
+        if ((count _squad4) > 0) then {
+            _removedCount = count _squad4;
+            _squad4 = [];
+        } else {
+            if ((count _squad3) > 0) then {
+                _removedCount = count _squad3;
+                _squad3 = [];
+            } else {
+                if ((count _squad2) > 0) then {
+                    _removedCount = count _squad2;
+                    _squad2 = [];
+                } else {
+                    if ((count _squad1) > 0) then {
+                        _removedCount = count _squad1;
+                        _squad1 = [];
+                    };
+                };
+            };
+        };
+        if (_removedCount > 0) then {
+            _building_ai_max = _building_ai_max + _removedCount;
+        };
     };
 
     if (_sector in sectors_factory) then {
@@ -222,29 +247,60 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
         };
     };
 
-    _managed_units = _managed_units + ([_sectorpos] call KPLIB_fnc_spawnMilitaryPostSquad);
+    if (_sector in sectors_tower) then {
+        private _postUnits = ([_sectorpos] call KPLIB_fnc_spawnMilitaryPostSquad);
+        _managed_units append _postUnits;
+        if ((count _postUnits) > 0) then {
+            private _grpPost = group (_postUnits select 0);
+            _grpPost setVariable ["lambs_danger_enableGroupReinforce", false, true];
+            [_grpPost, _sectorpos, 50, [], true, true] call lambs_wp_fnc_taskCamp;
+        };
+    } else {
+        _managed_units = _managed_units + ([_sectorpos] call KPLIB_fnc_spawnMilitaryPostSquad);
+    };
 
     if (count _squad1 > 0) then {
         _grp = [_sector, _squad1] call KPLIB_fnc_spawnRegularSquad;
-        [_grp, _sectorpos] spawn add_defense_waypoints;
+        if (_sector in sectors_tower) then {
+            // Disable LAMBS group reinforcement for tower guards and set camp behavior near tower
+            _grp setVariable ["lambs_danger_enableGroupReinforce", false, true];
+            [_grp, _sectorpos, 50, [], true, true] call lambs_wp_fnc_taskCamp;
+        } else {
+            [_grp, _sectorpos] spawn add_defense_waypoints;
+        };
         _managed_units = _managed_units + (units _grp);
     };
 
     if (count _squad2 > 0) then {
         _grp = [_sector, _squad2] call KPLIB_fnc_spawnRegularSquad;
-        [_grp, _sectorpos] spawn add_defense_waypoints;
+        if (_sector in sectors_tower) then {
+            _grp setVariable ["lambs_danger_enableGroupReinforce", false, true];
+            [_grp, _sectorpos, 50, [], true, true] call lambs_wp_fnc_taskCamp;
+        } else {
+            [_grp, _sectorpos] spawn add_defense_waypoints;
+        };
         _managed_units = _managed_units + (units _grp);
     };
 
     if (count _squad3 > 0) then {
         _grp = [_sector, _squad3] call KPLIB_fnc_spawnRegularSquad;
-        [_grp, _sectorpos] spawn add_defense_waypoints;
+        if (_sector in sectors_tower) then {
+            _grp setVariable ["lambs_danger_enableGroupReinforce", false, true];
+            [_grp, _sectorpos, 50, [], true, true] call lambs_wp_fnc_taskCamp;
+        } else {
+            [_grp, _sectorpos] spawn add_defense_waypoints;
+        };
         _managed_units = _managed_units + (units _grp);
     };
 
     if (count _squad4 > 0) then {
         _grp = [_sector, _squad4] call KPLIB_fnc_spawnRegularSquad;
-        [_grp, _sectorpos] spawn add_defense_waypoints;
+        if (_sector in sectors_tower) then {
+            _grp setVariable ["lambs_danger_enableGroupReinforce", false, true];
+            [_grp, _sectorpos, 50, [], true, true] call lambs_wp_fnc_taskCamp;
+        } else {
+            [_grp, _sectorpos] spawn add_defense_waypoints;
+        };
         _managed_units = _managed_units + (units _grp);
     };
 
@@ -306,8 +362,11 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
     private _activationTime = time;
     // sector lifetime loop
     while {!_stopit} do {
-        // sector was captured
-        if (([_sectorpos, _local_capture_size] call KPLIB_fnc_getSectorOwnership == GRLIB_side_friendly) && (GRLIB_endgame == 0)) then {
+        // Refresh rear/capturable status in case the front changed while the sector is active
+        _eligibleEnemies = if (isNil "KPLIB_captureEligiblePairs") then { [] } else { (KPLIB_captureEligiblePairs apply { _x select 0 }) };
+        _isRear = !(_sector in _eligibleEnemies);
+        // sector was captured - but only if it's capturable (not a rear/uncapturable sector)
+        if (([_sectorpos, _local_capture_size] call KPLIB_fnc_getSectorOwnership == GRLIB_side_friendly) && (GRLIB_endgame == 0) && !_isRear) then {
             if (isServer) then {
                 [_sector] spawn sector_liberated_remote_call;
             } else {
@@ -352,8 +411,10 @@ if (!_didRestore && (!(_sector in blufor_sectors)) && (([markerPos _sector, [_op
             };
 
             if (_sector_despawn_tickets <= 0) then {
-                // Save current state before despawning so it can be restored later
-                [_sector, _managed_units] call KPLIB_fnc_saveSectorState;
+                // Save current state before despawning so it can be restored later - but only for capturable sectors
+                if (!_isRear) then {
+                    [_sector, _managed_units] call KPLIB_fnc_saveSectorState;
+                };
                 {
                     if (_x isKindOf "Man") then {
                         deleteVehicle _x;

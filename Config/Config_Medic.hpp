@@ -7,22 +7,25 @@ class medic {
 	rank = "Corporal";
 	description = $STR_DT_Medic_Description;
 	traits[] = {
-		{"Medic",true}
+		{"Medic",true};
 	};
 	customVariables[] = {
-		{"ace_medical_medicClass",2,true}
+		{"commandant","false",true};
+		{"PJ", "false", true};
+		{"ACE_isEngineer", 0, true};
+		{"Ace_medical_medicClass", 2, true};
 	};
 	icon = "a3\ui_f\data\map\vehicleicons\iconManMedic_ca.paa";
 
 	defaultLoadout[] = {
-		{"arifle_MX_pointer_F","","acc_pointer_IR","",{"30Rnd_65x39_caseless_mag",30},{},""},
+		{"arifle_Katiba_F","","ACE_DBAL_A3_Red","optic_ACO_grn",{"30Rnd_65x39_caseless_green",30},{},""},
 		{},
-		{"hgun_P07_F","","","",{"16Rnd_9x21_Mag",16},{},""},
-		{"U_B_CTRG_3",{{"FirstAidKit",1},{"30Rnd_65x39_caseless_mag",2,30},{"Chemlight_green",1,1}}},
-		{"V_PlateCarrierH_CTRG",{{"30Rnd_65x39_caseless_mag",3,30},{"16Rnd_9x21_Mag",2,16},{"SmokeShell",1,1},{"SmokeShellGreen",1,1},{"SmokeShellBlue",1,1},{"SmokeShellOrange",1,1},{"Chemlight_green",1,1}}},
-		{"B_AssaultPack_rgr_Medic",{{"Medikit",1},{"FirstAidKit",10}}},
-		"H_HelmetB_light_desert","",{},
-		{"ItemMap","ItemGPS","ItemRadio","ItemCompass","ItemWatch","NVGoggles"}
+		{},
+		{"U_O_CombatUniform_ocamo",{{"ACRE_PRC343",1},{"ACE_EHP",1},{"ACE_IR_Strobe_Item",1}}},
+		{"V_HarnessO_brn",{{"ACE_microDAGR",1},{"ACE_EntrenchingTool",1},{"30Rnd_65x39_caseless_green",7,30},{"30Rnd_65x39_caseless_green_mag_Tracer",3,30},{"SmokeShell",2,1},{"HandGrenade",2,1}}},
+		{"B_Carryall_ocamo",{{"ACE_splint",6},{"ACE_tourniquet",4},{"ACE_quikclot",50},{"ACE_elasticBandage",25},{"ACE_bodyBag",1},{"ACE_bloodIV",5},{"Medikit",2},{"ACE_surgicalKit",1},{"ACE_suture",25},{"ACE_morphine",10},{"ACE_epinephrine",10},{"ACE_bloodIV_500",5},{"ACE_packingBandage",25},{"ACE_painkillers",2,10}}},
+		"H_HelmetO_ocamo","",{"ACE_Vector","","","",{},{},""},
+		{"ItemMap","","","ItemCompass","ACE_Altimeter","ACE_NVG_Gen4_Black_WP"}
 	};
 
 	arsenalWeapons[] = {
@@ -32,7 +35,13 @@ class medic {
 
 	};
 	arsenalItems[] = {
-		"Medikit"
+		"Medikit",
+		"ACE_bloodIV",
+		"ACE_bloodIV_500",
+		"ACE_epinephrine",
+		"ACE_morphine",
+		"ACE_surgicalKit",
+		"ACE_suture"
 	};
 	arsenalBackpacks[] = {
 

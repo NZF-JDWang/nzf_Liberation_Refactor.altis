@@ -23,6 +23,12 @@ params [
     ["_update", false, [false]]
 ];
 
+// Ensure execution on server
+if (!isServer) exitWith {
+    [_cratetype, _storage, _update] remoteExecCall ["KPLIB_fnc_crateFromStorage", 2];
+    true
+};
+
 // Validate parameters
 if !((toLower _cratetype) in KPLIB_crates) exitWith {["Invalid craty type given: %1", _cratetype] call BIS_fnc_error; false};
 if (isNull _storage) exitWith {["Null object given"] call BIS_fnc_error; false};
@@ -63,7 +69,12 @@ _i = 0;
     _i = _i + 1;
 } forEach (_storedCrates apply {[_x, [typeOf _x] call KPLIB_fnc_getCrateHeight]});
 
-// Update sector resources
+// If unloading from a FOB storage, request a resource recalculation on the server
+if ((_storage getVariable ["KP_liberation_storage_type", -1]) == 0) then {
+    please_recalculate = true;
+};
+
+// For sector storage (type 1), recalc sectors only when explicitly requested
 if (_update) then {
     if ((_storage getVariable ["KP_liberation_storage_type", -1]) == 1) then {
         recalculate_sectors = true;

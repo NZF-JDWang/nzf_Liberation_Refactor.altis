@@ -21,6 +21,11 @@ KPLIB_sectorEligibleOverlays = [];
 
 // Helper that (re)builds the visual state
 KPLIB_fnc_handleEligibilityUpdate = {
+    // Debug: Log when this function is called
+    if (KP_liberation_debug) then {
+        systemChat format ["ELIGIBILITY UPDATE CALLED - pairs count: %1", count (missionNamespace getVariable ["KPLIB_captureEligiblePairs", []])];
+    };
+    
     private _pairs = if (isNil "KPLIB_captureEligiblePairs") then { [] } else { +KPLIB_captureEligiblePairs };
 
     // 1.  Colour all enemy sectors with OPFOR colour at 50% alpha
@@ -42,6 +47,16 @@ KPLIB_fnc_handleEligibilityUpdate = {
         deleteMarkerLocal _x;
     } forEach KPLIB_sectorEligibleOverlays;
     KPLIB_sectorEligibleOverlays = [];
+    
+    // AGGRESSIVE cleanup: Delete ALL KPLIB_cap_ markers before recreating them
+    // Use the same approach that worked in manual testing
+    private _allCapMarkers = allMapMarkers select { (_x find "KPLIB_cap_") == 0 };
+    {
+        deleteMarkerLocal _x;
+    } forEach _allCapMarkers;
+    
+    // Force a small delay to ensure deletions are processed before recreation
+    uiSleep 0.01;
 
     // 3.  For each capturable enemy sector draw connector line and overlay ring
     //    We also ensure the history lines (previously captured sectors) remain visible.
@@ -93,8 +108,8 @@ KPLIB_fnc_handleEligibilityUpdate = {
             private _ovName = format ["KPLIB_cap_%1", _enemyMarker];
             deleteMarkerLocal _ovName;
             private _ov = createMarkerLocal [_ovName, markerPos _enemyMarker];
-            _ov setMarkerTypeLocal "selector_selectedMission";
-            _ov setMarkerColorLocal GRLIB_color_enemy_bright; // bright red ring
+            _ov setMarkerTypeLocal "selector_selectedFriendly";
+            _ov setMarkerColorLocal "ColorRed"; // force standard red
             _ov setMarkerAlphaLocal 0.8;
             _ov setMarkerSizeLocal [2,2];
 

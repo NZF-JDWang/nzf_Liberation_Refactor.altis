@@ -84,20 +84,20 @@ KP_liberation_fuel_max = 45;
 
 /* - Gameplay constant settings.
 Name of the savegame namespace inside of the [ServerProfileName].vars.Arma3Profile file. */
-GRLIB_save_key = "KP_LIBERATION_" + (toUpper worldName) + "_SAVEGAME";
+GRLIB_save_key = "NZF_LIBERATION_" + (toUpper worldName) + "_SAVEGAME";
 
 KP_liberation_save_interval = 60;                                       // Interval in seconds for automatic save.
 
-GRLIB_side_friendly = WEST;                                             // Friendly side.
-GRLIB_side_enemy = EAST;                                                // Enemy side.
-GRLIB_side_resistance = RESISTANCE;                                     // Resistance side.
+GRLIB_side_friendly = EAST;                                             // Friendly side.
+GRLIB_side_enemy = RESISTANCE;                                                // Enemy side.
+GRLIB_side_resistance = WEST;                                     // Resistance side.
 GRLIB_side_civilian = CIVILIAN;                                         // Civilian side.
 GRLIB_respawn_marker = "respawn";                                       // Respawn marker name.
 
-GRLIB_color_friendly = "ColorBLUFOR";                                   // Friendly sector marker color.
-GRLIB_color_enemy = "ColorOPFOR";                                       // Enemy sector marker color.
-GRLIB_color_enemy_bright = "ColorRED";                                  // Enemy sector marker color (activated).
-GRLIB_color_capture_line = "ColorBLUFOR";                          // Line colour from frontline to capturable sector
+GRLIB_color_friendly = "colorOPFOR";                                   // Friendly sector marker color.
+GRLIB_color_enemy = "colorIndependent";                                       // Enemy sector marker color.
+GRLIB_color_enemy_bright = "colorOPFOR";                                  // Enemy sector marker color (activated).
+GRLIB_color_capture_line = "colorCivilian";                          // Line colour from frontline to capturable sector
 
 GRLIB_fob_range = 125;                                                  // Build range around the main FOB building.
 GRLIB_halo_altitude = 2500;                                             // Altitude in metres for the HALO jump.
@@ -1024,3 +1024,10 @@ GRLIB_blufor_cap = (GRLIB_blufor_cap * GRLIB_unitcap) min 100;
 GRLIB_sector_cap = GRLIB_sector_cap * GRLIB_unitcap;
 GRLIB_battlegroup_cap = GRLIB_battlegroup_cap * GRLIB_unitcap;
 GRLIB_patrol_cap = GRLIB_patrol_cap * GRLIB_unitcap;
+
+// Initialize basic side hostility (critical for custom side configurations)
+// This ensures enemy side is always hostile to friendly side from mission start
+if (isServer) then {
+    GRLIB_side_enemy setFriend [GRLIB_side_friendly, 0];
+    GRLIB_side_friendly setFriend [GRLIB_side_enemy, 0];
+};

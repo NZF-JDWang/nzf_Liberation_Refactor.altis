@@ -23,6 +23,12 @@ params [
     ["_update", false, [false]]
 ];
 
+// Ensure execution on server
+if (!isServer) exitWith {
+    [_crate, _storage, _update] remoteExecCall ["KPLIB_fnc_crateToStorage", 2];
+    true
+};
+
 // Validate parameters
 if (isNull _crate) exitWith {["Null object given"] call BIS_fnc_error; false};
 
@@ -44,12 +50,15 @@ if (!isNull _storage) then {
     [_crate, false] remoteExec ["enableRopeAttach"];
     if(KP_liberation_ace) then {[_crate, false, [0, 1.5, 0], 0] remoteExec ["ace_dragging_fnc_setCarryable"];};
 
-    // Update sector resource values, if requested
-    if (_update) then {
-        if ((_storage getVariable ["KP_liberation_storage_type", -1]) == 1) then {
-            recalculate_sectors = true;
-            publicVariableServer "recalculate_sectors";
-        };
+    // If storing to a FOB storage, request a resource recalculation on the server
+    private _stype = _storage getVariable ["KP_liberation_storage_type", -1];
+    if (_stype == 0) then {
+        please_recalculate = true;
+    };
+    // Update sector resource values if explicitly requested
+    if (_update && {_stype == 1}) then {
+        recalculate_sectors = true;
+        publicVariableServer "recalculate_sectors";
     };
 } else {
     if (!isDedicated) then {

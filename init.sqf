@@ -8,6 +8,23 @@ enableSaving [ false, false ];
 
 if (isDedicated) then {debug_source = "Server";} else {debug_source = name player;};
 
+// ----- Early military alphabet init (server defines, broadcasts) -----
+if (isServer) then {
+    private _saveKey = "NZF_LIBERATION_" + (toUpper worldName) + "_SAVEGAME";
+    private _hasSave = !isNil { profileNamespace getVariable _saveKey };
+
+    // Base list
+    military_alphabet = ["Agent_F","Butch","CaptainPi","Stache","Fox","JD","Josh","Kev","Leo","Panda","Mitchell","Old_Mate","Painless","Psych","pyro","Snoman","Vanguard"];
+
+    // Randomize only for NEW campaigns (no save present)
+    if (!_hasSave) then {
+        military_alphabet = military_alphabet call BIS_fnc_arrayShuffle;
+    };
+
+    // Broadcast to all clients (JIP-safe)
+    missionNamespace setVariable ["military_alphabet", military_alphabet, true];
+};
+
 [] call KPLIB_fnc_initSectors;
 if (!isServer) then {waitUntil {!isNil "KPLIB_initServer"};};
 [] call compileFinal preprocessFileLineNumbers "scripts\shared\fetch_params.sqf";
@@ -16,11 +33,12 @@ if (!isServer) then {waitUntil {!isNil "KPLIB_initServer"};};
 [] call compileFinal preprocessFileLineNumbers "kp_objectInits.sqf";
 
 // Activate selected player menu. If CBA isn't loaded -> fallback to GREUH
-if (KPPLM_CBA && KP_liberation_playermenu) then {
+// KP Player Menu disabled - using GREUH fallback
+/*if (KPPLM_CBA && KP_liberation_playermenu) then {
     [] call KPPLM_fnc_postInit;
-} else {
+} else {*/
     [] execVM "GREUH\scripts\GREUH_activate.sqf";
-};
+/*};*/
 
 [] call compileFinal preprocessFileLineNumbers "scripts\shared\init_shared.sqf";
 

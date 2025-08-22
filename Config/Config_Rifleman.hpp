@@ -10,51 +10,33 @@ class rifleman {
 
 	};
 	customVariables[] = {
+		{"commandant","false",true};
+		{"PJ", "false", true};
+		{"ACE_isEngineer", 0, true};
+		{"Ace_medical_medicClass", 0, true};
 
 	};
 	icon = "a3\ui_f\data\map\vehicleicons\iconMan_ca.paa";
 
 	defaultLoadout[] = {
-		{"arifle_MX_ACO_pointer_F","","acc_pointer_IR","optic_Aco",{"30Rnd_65x39_caseless_mag",30},{},""},
+		{"arifle_Katiba_ACO_pointer_F","","ACE_DBAL_A3_Red","optic_ACO_grn",{"30Rnd_65x39_caseless_green",30},{},""},
+		{"launch_RPG32_F","","","",{"RPG32_F",1},{},""},
 		{},
-		{"hgun_P07_F","","","",{"16Rnd_9x21_Mag",16},{},""},
-		{"U_B_CTRG_3",{{"FirstAidKit",1},{"30Rnd_65x39_caseless_mag",2,30},{"Chemlight_green",1,1}}},
-		{"V_PlateCarrierL_CTRG",{{"30Rnd_65x39_caseless_mag",7,30},{"16Rnd_9x21_Mag",2,16},{"SmokeShell",1,1},{"SmokeShellGreen",1,1},{"Chemlight_green",1,1},{"HandGrenade",2,1}}},
-		{},
-		"H_HelmetB","",{},
-		{"ItemMap","ItemGPS","ItemRadio","ItemCompass","ItemWatch","NVGoggles"}
+		{"U_O_CombatUniform_ocamo",{{"ACRE_PRC343",1},{"ACE_EHP",1},{"ACE_IR_Strobe_Item",1}}},
+		{"V_HarnessO_brn",{{"ACE_microDAGR",1},{"ACE_EntrenchingTool",1},{"30Rnd_65x39_caseless_green",7,30},{"30Rnd_65x39_caseless_green_mag_Tracer",3,30},{"SmokeShell",2,1},{"HandGrenade",2,1}}},
+		{"B_FieldPack_ocamo",{{"FirstAidKit",2},{"ACE_salineIV_250",2},{"ACE_splint",4},{"ACE_tourniquet",4},{"ACE_quikclot",10},{"ACE_elasticBandage",10},{"ACE_bodyBag",1},{"ACE_painkillers",1,10},{"RPG32_F",1,1},{"RPG32_HE_F",1,1}}},
+		"H_HelmetO_ocamo","",{"ACE_Vector","","","",{},{},""},
+		{"ItemMap","","ItemRadio","ItemCompass","ACE_Altimeter","ACE_NVG_Gen4_Black_WP"}
 	};
 
 	arsenalWeapons[] = {
-		"LMG_Mk200_F",
-		"LMG_Mk200_black_F",
 
-		"launch_B_Titan_short_F",
-		"launch_B_Titan_F",
-		"launch_MRAWS_green_rail_F",
-		"launch_MRAWS_olive_rail_F",
-		"launch_MRAWS_sand_rail_F",
-		"srifle_EBR_F",
-		"srifle_LRR_F",
-
-		"launch_MRAWS_green_F",
-		"launch_MRAWS_olive_F",
-		"launch_MRAWS_sand_F",
-		"launch_NLAW_F",
-
-		"launch_B_Titan_F",
-		"launch_B_Titan_olive_F",
-		"launch_B_Titan_short_F",
-		"launch_B_Titan_short_tna_F",
-		"launch_B_Titan_tna_F"
 	};
 	arsenalMagazines[] = {
 
 	};
 	arsenalItems[] = {
-		"optic_AMS",
-		"optic_AMS_snd",
-		"optic_LRPS"
+
 	};
 	arsenalBackpacks[] = {
 

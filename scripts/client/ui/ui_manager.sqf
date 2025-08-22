@@ -17,8 +17,9 @@ KP_liberation_fuel = 0;
 KP_liberation_air_vehicle_building_near = false;
 KP_liberation_recycle_building_near = false;
 
-waitUntil { !isNil "synchro_done" };
-waitUntil { synchro_done };
+// With legacy PV, rely on save_is_loaded to gate UI
+waitUntil { !isNil "save_is_loaded" };
+waitUntil { save_is_loaded };
 
 if (isNil "cinematic_camera_started") then {cinematic_camera_started = false;};
 if (isNil "halojumping") then {halojumping = false;};

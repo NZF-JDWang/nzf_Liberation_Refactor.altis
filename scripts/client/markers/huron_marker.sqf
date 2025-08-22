@@ -1,6 +1,7 @@
 private [ "_huronlocal" ];
 
 "huronmarker" setMarkerTextLocal "Spartan 01";
+"huronmarker" setMarkerColorLocal GRLIB_color_friendly;
 
 while { true } do {
     _huronlocal = [] call KPLIB_fnc_potatoScan;

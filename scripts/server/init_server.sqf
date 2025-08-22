@@ -50,7 +50,8 @@ execVM "scripts\server\game\manage_weather.sqf";
 execVM "scripts\server\game\playtime.sqf";
 execVM "scripts\server\game\save_manager.sqf";
 execVM "scripts\server\game\spawn_radio_towers.sqf";
-execVM "scripts\server\game\synchronise_vars_delta.sqf";
+// Legacy sync for HUD/global vars
+execVM "scripts\server\game\synchronise_vars.sqf";
 execVM "scripts\server\game\synchronise_eco.sqf";
 execVM "scripts\server\game\zeus_synchro.sqf";
 execVM "scripts\server\offloading\show_fps.sqf";

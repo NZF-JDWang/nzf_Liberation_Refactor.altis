@@ -208,6 +208,7 @@ if (!isNil "_saveData") then {
             KPLIB_sectorStates set [_x select 0, _x select 1];
         } forEach _savedSectorStates;
         publicVariable "KPLIB_sectorStates";
+        
 
         stats_ammo_produced                         = _stats select  0;
         stats_ammo_spent                            = _stats select  1;
@@ -274,6 +275,8 @@ if (!isNil "_saveData") then {
         KPLIB_sectorStates = createHashMap;
         publicVariable "KPLIB_sectorStates";
 
+        
+
         stats_opfor_soldiers_killed                 = _stats select  0;
         stats_opfor_killed_by_players               = _stats select  1;
         stats_blufor_soldiers_killed                = _stats select  2;
@@ -307,6 +310,10 @@ if (!isNil "_saveData") then {
     armor_weight = _weights select 1;
     air_weight = _weights select 2;
 
+    // Set explicit hostility between main factions
+    GRLIB_side_friendly setFriend [GRLIB_side_enemy, 0];
+    GRLIB_side_enemy setFriend [GRLIB_side_friendly, 0];
+    
     // Set correct resistance standing
     private _resistanceEnemy = [0, 1] select (KP_liberation_civ_rep < 25);
     private _resistanceFriendly = [0, 1] select (KP_liberation_civ_rep >= -25);
@@ -522,6 +529,12 @@ if (!isNil "_saveData") then {
     // Ensure sector state map starts empty when no save exists
     KPLIB_sectorStates = createHashMap;
     publicVariable "KPLIB_sectorStates";
+    
+    // Set explicit hostility between main factions for new campaigns
+    GRLIB_side_friendly setFriend [GRLIB_side_enemy, 0];
+    GRLIB_side_enemy setFriend [GRLIB_side_friendly, 0];
+
+    
 };
 
 publicVariable "stats_civilian_vehicles_seized";

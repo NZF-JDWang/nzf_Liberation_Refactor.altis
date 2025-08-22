@@ -11,9 +11,9 @@
 
 scriptName "KPLIB_playerNamespace";
 
-waitUntil {!isNil "one_synchro_done"};
+waitUntil {!isNil "save_is_loaded"};
 waitUntil {!isNil "one_eco_done"};
-waitUntil {one_synchro_done};
+waitUntil {save_is_loaded};
 waitUntil {one_eco_done};
 
 private _fobPos = [0, 0, 0];

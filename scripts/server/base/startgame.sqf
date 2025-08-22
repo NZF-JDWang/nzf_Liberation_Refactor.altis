@@ -70,4 +70,6 @@ if (GRLIB_all_fobs isEqualTo []) then {
         _smoke = "SmokeShellGreen" createVehicle (getPos _x);
         _smoke attachTo [_x];
     } forEach KPLIB_startCrates;
+} else {
+    ["Using default military alphabet order for existing campaign", "STARTGAME"] call KPLIB_fnc_log;
 };

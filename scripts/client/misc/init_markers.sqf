@@ -8,3 +8,7 @@ _marker setMarkerAlphaLocal 0;   // Hide the zone capture marker – keep it for
 _marker = createMarkerLocal ["spawn_marker", markers_reset];
 _marker setMarkerColorLocal "ColorGreen";
 _marker setMarkerTypeLocal "Select";
+
+// Override hardcoded marker colors from mission.sqm to use configurable friendly color
+"startbase_marker" setMarkerColorLocal GRLIB_color_friendly;
+"huronmarker" setMarkerColorLocal GRLIB_color_friendly;

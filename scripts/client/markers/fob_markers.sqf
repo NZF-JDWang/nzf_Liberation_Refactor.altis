@@ -45,6 +45,12 @@ while {true} do {
             };
         };
     };
+    // Refresh marker texts to pick up any late alphabet publication/randomization
+    if (count _markers == count GRLIB_all_fobs) then {
+        for "_idx" from 0 to ((count _markers) - 1) do {
+            (_markers select _idx) setMarkerTextLocal format ["FOB %1", (military_alphabet select _idx)];
+        };
+    };
 
     sleep 5;
 };

@@ -13,7 +13,8 @@ _nearfob = [] call KPLIB_fnc_getNearestFob;
 _logi_destinations = [];
 
 {
-    _logi_destinations pushBack [(format ["FOB %1", military_alphabet select _forEachIndex]), (_x select 0), (_x select 1), (_x select 2), (_x select 3)];
+    private _fobPos = _x select 0; // standardized as position
+    _logi_destinations pushBack [(format ["FOB %1", military_alphabet select _forEachIndex]), _fobPos, (_x select 1), (_x select 2), (_x select 3)];
 } forEach KP_liberation_fob_resources;
 
 {

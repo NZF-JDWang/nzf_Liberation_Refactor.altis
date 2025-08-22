@@ -4,13 +4,11 @@
     Author: Refactor by AI assistant (based on KP Liberation original sync script)
 */
 
-scriptName "KPLIB_syncVarsDeltaServer";
-
-// Ensure this runs only on server
-if (!isServer) exitWith {};
+// Server delta sync enabled
 
 // ---------- Wait until essential globals available ----------
 waitUntil { !isNil "save_is_loaded" };
+waitUntil { save_is_loaded };
 waitUntil { !isNil "KP_liberation_fob_resources" };
 waitUntil { !isNil "KP_liberation_supplies_global" };
 waitUntil { !isNil "KP_liberation_ammo_global" };
@@ -28,7 +26,17 @@ waitUntil { !isNil "KP_liberation_guerilla_strength" };
 waitUntil { !isNil "infantry_weight" };
 waitUntil { !isNil "armor_weight" };
 waitUntil { !isNil "air_weight" };
-waitUntil { save_is_loaded };
+
+// Wait for initial resource calculation to complete
+waitUntil { 
+    sleep 0.1;
+    !isNil "KP_liberation_supplies_global" && 
+    !isNil "KP_liberation_ammo_global" && 
+    !isNil "KP_liberation_fuel_global" && 
+    KP_liberation_supplies_global >= 0 && 
+    KP_liberation_ammo_global >= 0 && 
+    KP_liberation_fuel_global >= 0 
+};
 
 // ---------- Helper to gather current state ----------
 private _collectState = {
@@ -64,7 +72,7 @@ publicVariable "sync_vars_full";
 publicVariable "sync_vars_delta"; // ensure variable exists for EH on clients
 
 private _lastFull   = diag_tickTime;
-private _fullEvery  = 30;   // seconds
+private _fullEvery  = 12;   // seconds, more frequent to aid JIP and reduce visible stalls
 
 // ---------- Main loop ----------
 while { true } do {
@@ -84,6 +92,21 @@ while { true } do {
         sync_vars_delta = [sync_rev, _changes];
         publicVariable "sync_vars_delta";
         _oldState = +_currentState;
+        
+        // Debug logging
+        if (KP_liberation_savegame_debug > 0) then {
+            [format ["Delta sync sent - revision: %1, %2 changes", sync_rev, count _changes], "SYNC"] call KPLIB_fnc_log;
+            {
+                private _varName = switch (_x select 0) do {
+                    case 0: {"KP_liberation_fob_resources"};
+                    case 1: {"KP_liberation_supplies_global"};
+                    case 2: {"KP_liberation_ammo_global"};
+                    case 3: {"KP_liberation_fuel_global"};
+                    default {format ["var_%1", _x select 0]};
+                };
+                [format ["  Change: %1 = %2", _varName, _x select 1], "SYNC"] call KPLIB_fnc_log;
+            } forEach _changes;
+        };
     };
 
     if ((diag_tickTime - _lastFull) > _fullEvery) then {
@@ -92,5 +115,10 @@ while { true } do {
         publicVariable "sync_vars_full";
         _lastFull = diag_tickTime;
         _oldState = +_currentState; // keep states aligned
+        
+        // Debug logging
+        if (KP_liberation_savegame_debug > 0) then {
+            [format ["Full sync sent - revision: %1", sync_rev], "SYNC"] call KPLIB_fnc_log;
+        };
     };
 }; 

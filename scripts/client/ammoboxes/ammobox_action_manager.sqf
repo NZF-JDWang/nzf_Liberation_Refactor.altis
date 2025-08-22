@@ -1,7 +1,6 @@
 waitUntil {!isNil "build_confirmed"};
-waitUntil {!isNil "one_synchro_done"};
+// With legacy PV, resource/state vars exist after save_is_loaded; eco sync remains
 waitUntil {!isNil "one_eco_done"};
-waitUntil {one_synchro_done};
 waitUntil {one_eco_done};
 
 private ["_managed_trucks", "_managed_boxes", "_managed_areas", "_next_truck", "_next_box", "_truck_load", "_checked_trucks", "_checked_boxes", "_action_id","_action_id2","_action_id3","_action_id4","_b_action_id1","_b_action_id2","_b_action_id3","_b_action_id4"];

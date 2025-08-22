@@ -18,14 +18,14 @@ class officer {
 	icon = "a3\ui_f\data\map\vehicleicons\iconManCommander_ca.paa";
 
 	defaultLoadout[] = {
-		{"arifle_MXC_ACO_F","","","optic_Aco",{"30Rnd_65x39_caseless_mag",30},{},""},
+		{"arifle_CTAR_blk_F","","ACE_DBAL_A3_Green","optic_VRCO_RF",{"30Rnd_580x42_Mag_F",30},{},""},
 		{},
-		{"hgun_Pistol_heavy_01_MRD_F","","","optic_MRD",{"11Rnd_45ACP_Mag",11},{},""},
-		{"U_B_CTRG_3",{{"FirstAidKit",1},{"30Rnd_65x39_caseless_mag",2,30},{"Chemlight_green",1,1}}},
-		{"V_PlateCarrierL_CTRG",{{"30Rnd_65x39_caseless_mag",1,30},{"11Rnd_45ACP_Mag",2,11},{"SmokeShell",1,1},{"SmokeShellGreen",1,1},{"Chemlight_green",1,1}}},
 		{},
-		"H_Beret_Colonel","",{},
-		{"ItemMap","ItemGPS","ItemRadio","ItemCompass","ItemWatch",""}
+		{"U_O_OfficerUniform_ocamo",{{"ACRE_PRC343",1},{"ACRE_PRC152",1},{"ACE_IR_Strobe_Item",1},{"ACE_EHP",1},{"Chemlight_red",2,1}}},
+		{"V_BandollierB_khk",{{"30Rnd_580x42_Mag_F",7,30},{"30Rnd_580x42_Mag_Tracer_F",3,30}}},
+		{"B_RadioBag_01_hex_F",{{"ACE_salineIV_250",2},{"ACE_splint",2},{"ACE_tourniquet",3},{"ACE_bodyBag",1},{"ACE_fieldDressing",1},{"ACE_packingBandage",1},{"ACE_morphine",1},{"ACE_HandFlare_Green",2,1},{"SmokeShellGreen",2,1},{"SmokeShellRed",3,1},{"ACE_Chemlight_HiGreen",2,1},{"ACE_Chemlight_IR",2,1},{"ACE_painkillers",1,10},{"SmokeShell",1,1},{"HandGrenade",1,1}}},
+		"H_HelmetO_ocamo","",{"Laserdesignator_02","","","",{"Laserbatteries",1},{},""},
+		{"ItemMap","ItemMotionSensor_lxWS","","ItemCompass","ACE_Altimeter","ACE_NVG_Gen4_Black_WP"}
 	};
 
 	arsenalWeapons[] = {
@@ -35,9 +35,9 @@ class officer {
 
 	};
 	arsenalItems[] = {
-		"H_Beret_Colonel", "U_I_E_Uniform_01_officer_F"
+		"H_Beret_Colonel", "ItemMotionSensor_lxWS", "ACRE_PRC152"
 	};
 	arsenalBackpacks[] = {
-
+		"B_RadioBag_01_hex_F"
 	};
 };

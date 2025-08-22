@@ -34,15 +34,14 @@ localize "STR_BUILD8"
 ];
 
 _nearfob = [] call KPLIB_fnc_getNearestFob;
-_actual_fob = KP_liberation_fob_resources select {((_x select 0) distance _nearfob) < GRLIB_fob_range};
+_actual_fob = KP_liberation_fob_resources select {(((_x select 0)) distance _nearfob) < GRLIB_fob_range};
 
 while {dialog && alive player && (dobuild == 0 || buildtype == 1)} do {
     _build_list = KPLIB_buildList select buildtype;
 
-    if (_oldbuildtype != buildtype || synchro_done) then {
-        synchro_done = false;
+    if (_oldbuildtype != buildtype) then {
         _oldbuildtype = buildtype;
-        _actual_fob = KP_liberation_fob_resources select {((_x select 0) distance _nearfob) < GRLIB_fob_range};
+        _actual_fob = KP_liberation_fob_resources select {(((_x select 0)) distance _nearfob) < GRLIB_fob_range};
 
         lbClear 110;
         {
@@ -83,11 +82,12 @@ while {dialog && alive player && (dobuild == 0 || buildtype == 1)} do {
             };
 
             _affordable = true;
-            if (
+            // Check if item costs resources and if we have FOB data to check against
+            if ((count _actual_fob > 0) && (
                 ((_x select 1 > 0) && ((_x select 1) > ((_actual_fob select 0) select 1))) ||
                 ((_x select 2 > 0) && ((_x select 2) > ((_actual_fob select 0) select 2))) ||
                 ((_x select 3 > 0) && ((_x select 3) > ((_actual_fob select 0) select 3)))
-            ) then {
+            )) then {
                 _affordable = false;
             };
 
@@ -122,11 +122,15 @@ while {dialog && alive player && (dobuild == 0 || buildtype == 1)} do {
     _base_link = "";
     if (dobuild == 0 && _selected_item != -1 && (_selected_item < (count _build_list))) then {
         _build_item = _build_list select _selected_item;
-        if (
-            ((_build_item select 1 == 0 ) || ((_build_item select 1) <= ((_actual_fob select 0) select 1))) &&
-            ((_build_item select 2 == 0 ) || ((_build_item select 2) <= ((_actual_fob select 0) select 2))) &&
-            ((_build_item select 3 == 0 ) || ((_build_item select 3) <= ((_actual_fob select 0) select 3)))
-        ) then {
+        // Check if item is free (0-cost) - always allow
+        private _isFree = ((_build_item select 1) == 0) && ((_build_item select 2) == 0) && ((_build_item select 3) == 0);
+        
+        if (_isFree || (
+            (count _actual_fob > 0) &&
+            ((_build_item select 1) <= ((_actual_fob select 0) select 1)) &&
+            ((_build_item select 2) <= ((_actual_fob select 0) select 2)) &&
+            ((_build_item select 3) <= ((_actual_fob select 0) select 3))
+        )) then {
             if !((_build_item select 0) isEqualType []) then {
                 if ((toLower (_build_item select 0)) in KPLIB_b_air_classes && !([_build_item select 0] call KPLIB_fnc_isClassUAV)) then {
                     if (KP_liberation_air_vehicle_building_near &&
